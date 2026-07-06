@@ -1,0 +1,27 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base
+  title="Page introuvable — Switch Point Immigration"
+  description="La page demandée n'existe pas ou a été déplacée."
+  noIndex
+>
+  <section class="relative flex min-h-[60vh] items-center overflow-hidden">
+    <div class="aurora top-10 left-1/3 h-96 w-96 bg-brand-500/20"></div>
+    <div class="relative mx-auto max-w-2xl px-4 py-20 text-center sm:px-6">
+      <p class="font-display text-8xl font-bold text-gradient">404</p>
+      <h1 class="font-display mt-4 text-3xl font-bold text-navy-900 dark:text-white">
+        Cette destination n'existe pas sur notre carte.
+      </h1>
+      <p class="mt-4 text-navy-900/60 dark:text-white/55">
+        La page a peut-être été déplacée. Reprenez la route par l'un de ces chemins :
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="/" class="btn-primary btn-lg">Retour à l'accueil</a>
+        <a href="/destinations" class="btn-secondary btn-lg">Voir les destinations</a>
+        <a href="/outils/simulateur" class="btn-secondary btn-lg">🎯 Simulateur</a>
+      </div>
+    </div>
+  </section>
+</Base>

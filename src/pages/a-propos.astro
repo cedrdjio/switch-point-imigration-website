@@ -1,0 +1,116 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import TestimonialsSlider from '@/components/TestimonialsSlider.astro';
+import { SITE } from '@/data/site';
+
+const crumbs = [
+  { name: 'Accueil', url: '/' },
+  { name: 'À propos', url: '/a-propos' },
+];
+
+const values = [
+  { icon: '🔍', title: 'Vérité avant vente', text: 'Si votre profil n’est pas prêt, nous vous le disons — et nous vous préparons. Un dossier déposé au mauvais moment est un refus qui vous suit.' },
+  { icon: '📜', title: 'Procédures officielles', text: 'Uniquement des voies légales et documentées : IRCC, Campus France, employeurs accrédités, consulats. Jamais de raccourci douteux.' },
+  { icon: '🤝', title: 'Un conseiller, un dossier', text: 'Vous connaissez le nom de la personne qui gère votre dossier. Elle connaît le vôtre, votre histoire et votre objectif.' },
+  { icon: '🌍', title: 'Ancrage africain', text: 'Nous connaissons les réalités des dossiers africains : documents, finances, délais consulaires. Nos stratégies en tiennent compte dès le départ.' },
+];
+
+const method = [
+  { n: '01', title: 'Diagnostic honnête', text: 'Évaluation gratuite du profil sur des critères officiels. Verdict clair : prêt, à renforcer, ou pas réaliste.' },
+  { n: '02', title: 'Stratégie chiffrée', text: 'Programme cible, budget total, calendrier, plan B. Vous signez en connaissant chaque paramètre.' },
+  { n: '03', title: 'Exécution rigoureuse', text: 'Checklists, revues de documents en 40 points, préparation aux entretiens. Rien ne part sans double contrôle.' },
+  { n: '04', title: 'Suivi jusqu’au bout', text: 'De la biométrie à l’installation : nous restons responsables du dossier jusqu’à votre arrivée.' },
+];
+---
+
+<Base
+  title="À propos — Notre méthode et nos valeurs | Switch Point Immigration"
+  description="Switch Point Immigration accompagne les candidats africains vers 9 destinations avec une méthode de cabinet : diagnostic honnête, stratégie chiffrée, suivi jusqu'à l'installation."
+  breadcrumbs={crumbs}
+>
+  <section class="relative overflow-hidden pt-10 pb-8">
+    <div class="aurora -top-24 left-1/4 h-96 w-96 bg-brand-500/18"></div>
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+      <Breadcrumbs crumbs={crumbs} />
+      <div class="mt-8 grid items-center gap-10 lg:grid-cols-2">
+        <div data-reveal>
+          <p class="eyebrow">À propos</p>
+          <h1 class="font-display mt-3 text-4xl font-bold tracking-tight text-navy-900 sm:text-5xl dark:text-white">
+            L'immigration est une science de dossier. <span class="text-gradient">Nous la pratiquons ainsi.</span>
+          </h1>
+          <p class="section-sub">
+            Switch Point est née d'un constat simple : trop de projets d'immigration échouent non par manque de mérite, mais par manque de méthode. Nous avons construit une agence qui travaille comme un cabinet — critères officiels, stratégie écrite, exécution contrôlée.
+          </p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="/rendez-vous" class="btn-primary btn-lg">Rencontrer un conseiller</a>
+            <a href="/destinations" class="btn-secondary btn-lg">Nos destinations</a>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3" data-reveal-group>
+          {
+            [
+              { v: '9', label: 'destinations couvertes' },
+              { v: '25+', label: 'programmes maîtrisés' },
+              { v: '97%', label: 'clients satisfaits' },
+              { v: '5j/7', label: 'suivi WhatsApp' },
+            ].map((s) => (
+              <div class="bento p-6 text-center" data-reveal-item>
+                <p class="font-display text-3xl font-bold text-brand-700 dark:text-brand-300">{s.v}</p>
+                <p class="mt-1 text-xs font-medium text-navy-900/50 dark:text-white/45">{s.label}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+    <SectionHead eyebrow="Nos valeurs" title="Ce qui ne se négocie pas" align="center" />
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
+      {
+        values.map((v) => (
+          <div class="bento bento-hover p-7" data-reveal-item>
+            <span class="text-3xl">{v.icon}</span>
+            <h3 class="font-display mt-4 font-bold text-navy-900 dark:text-white">{v.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{v.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto mt-20 max-w-7xl px-4 sm:px-6">
+    <SectionHead eyebrow="Notre méthode" title="Quatre temps, aucune improvisation" align="center" />
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
+      {
+        method.map((m) => (
+          <div class="bento p-7" data-reveal-item>
+            <span class="font-display text-4xl font-bold text-brand-500/25">{m.n}</span>
+            <h3 class="font-display mt-3 font-bold text-navy-900 dark:text-white">{m.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{m.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto mt-20 max-w-7xl overflow-hidden px-4 sm:px-6">
+    <SectionHead eyebrow="Témoignages" title="La preuve par les parcours" align="center" />
+    <div class="mt-10">
+      <TestimonialsSlider />
+    </div>
+  </section>
+
+  <section class="mx-auto mt-20 max-w-4xl px-4 sm:px-6">
+    <div class="bento bg-gradient-to-br from-brand-800 to-navy-950 p-10 text-center !text-white" data-reveal>
+      <h2 class="font-display text-2xl font-bold sm:text-3xl">Basés à {SITE.address.split(',')[0]}, présents partout.</h2>
+      <p class="mx-auto mt-3 max-w-xl text-white/65">
+        Consultations au bureau ou en visio, suivi WhatsApp, documents partagés en ligne : votre localisation n'est jamais un obstacle.
+      </p>
+      <a href="/contact" class="btn-primary btn-lg mt-7">Nous contacter</a>
+    </div>
+  </section>
+</Base>

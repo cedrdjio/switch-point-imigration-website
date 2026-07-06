@@ -1,0 +1,15 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  sub?: string;
+  align?: 'left' | 'center';
+}
+const { eyebrow, title, sub, align = 'left' } = Astro.props;
+---
+
+<div class={align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'} data-reveal>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h2 class="section-title mt-3" set:html={title} />
+  {sub && <p class={`section-sub ${align === 'center' ? 'mx-auto' : ''}`}>{sub}</p>}
+</div>

@@ -1,0 +1,93 @@
+---
+import Base from '@/layouts/Base.astro';
+import ToolShell from '@/components/ToolShell.astro';
+import { allPrograms } from '@/data/destinations';
+---
+
+<Base
+  title="Checklist de documents visa — Générateur gratuit | Switch Point"
+  description="Générez la liste exacte des documents requis pour votre programme d'immigration : Canada, France, Schengen, Australie et plus. Cochez, imprimez, partez serein."
+>
+  <ToolShell
+    icon="📋"
+    name="Checklist de documents"
+    intro="Sélectionnez votre programme : la liste officielle des pièces s'affiche. Cochez au fur et à mesure — votre progression est enregistrée sur cet appareil."
+    disclaimer="Liste de base commune aux dossiers standards. Selon votre situation (mineur, regroupement, refus antérieur), des pièces additionnelles peuvent être exigées."
+  >
+    <div class="bento mx-auto max-w-3xl p-6 sm:p-8">
+      <label class="block">
+        <span class="text-sm font-semibold text-navy-900 dark:text-white">Votre programme</span>
+        <select id="gd-select" class="input mt-2">
+          {
+            allPrograms.map(({ destination, program }, i) => (
+              <option value={`${destination.slug}-${program.slug}`} selected={i === 0}>
+                {destination.flag} {destination.name} — {program.name}
+              </option>
+            ))
+          }
+        </select>
+      </label>
+
+      {
+        allPrograms.map(({ destination, program }, i) => {
+          const key = `${destination.slug}-${program.slug}`;
+          return (
+            <div data-gd-panel={key} class={i === 0 ? 'mt-6' : 'mt-6 hidden'}>
+              <div class="mb-4 flex items-center justify-between">
+                <p class="text-sm font-bold text-navy-900 dark:text-white">
+                  {program.documents.length} documents requis
+                </p>
+                <span class="badge" data-gd-progress={key}>0 / {program.documents.length}</span>
+              </div>
+              <div class="space-y-2">
+                {program.documents.map((doc, j) => (
+                  <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-navy-900/8 p-4 text-sm transition-colors hover:border-brand-500/40 has-checked:border-emerald-500/50 has-checked:bg-emerald-500/5 dark:border-white/10">
+                    <input type="checkbox" data-gd-check data-store={`${key}-${j}`} class="mt-0.5 h-4 w-4 accent-emerald-600" />
+                    <span class="leading-snug text-navy-900/75 dark:text-white/70">{doc}</span>
+                  </label>
+                ))}
+              </div>
+              <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button data-gd-print class="btn-secondary btn-md flex-1">🖨 Imprimer ma checklist</button>
+                <a href={`/${destination.slug}/${program.slug}`} class="btn-primary btn-md flex-1">
+                  Voir le programme complet
+                </a>
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </ToolShell>
+</Base>
+
+<script>
+  const select = document.getElementById('gd-select') as HTMLSelectElement;
+  const panels = document.querySelectorAll<HTMLElement>('[data-gd-panel]');
+
+  select.addEventListener('change', () => {
+    panels.forEach((p) => p.classList.toggle('hidden', p.dataset.gdPanel !== select.value));
+  });
+
+  // Persistance locale + compteur
+  document.querySelectorAll<HTMLInputElement>('[data-gd-check]').forEach((cb) => {
+    const k = `sp-doc-${cb.dataset.store}`;
+    cb.checked = localStorage.getItem(k) === '1';
+    cb.addEventListener('change', () => {
+      localStorage.setItem(k, cb.checked ? '1' : '0');
+      updateCounts();
+    });
+  });
+
+  function updateCounts() {
+    panels.forEach((p) => {
+      const boxes = p.querySelectorAll<HTMLInputElement>('[data-gd-check]');
+      const done = Array.from(boxes).filter((b) => b.checked).length;
+      const badge = p.querySelector('[data-gd-progress]');
+      if (badge) badge.textContent = `${done} / ${boxes.length}`;
+    });
+  }
+  updateCounts();
+
+  document.querySelectorAll('[data-gd-print]').forEach((b) => b.addEventListener('click', () => window.print()));
+</script>

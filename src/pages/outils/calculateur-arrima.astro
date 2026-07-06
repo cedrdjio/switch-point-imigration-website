@@ -1,0 +1,125 @@
+---
+import Base from '@/layouts/Base.astro';
+import ToolShell from '@/components/ToolShell.astro';
+
+const selectClass = 'input mt-2';
+---
+
+<Base
+  title="Calculateur Arrima 2026 — Score PSTQ Québec | Switch Point"
+  description="Estimez votre score de déclaration d'intérêt Arrima pour le Programme de sélection des travailleurs qualifiés du Québec."
+>
+  <ToolShell
+    icon="⚜️"
+    name="Calculateur Arrima"
+    intro="Estimez votre score dans le bassin Arrima (PSTQ). Le français pèse lourd : voyez précisément combien de points il vous rapporte."
+    disclaimer="Estimation simplifiée de la grille de déclaration d'intérêt (candidat seul, facteurs principaux). Le score officiel est calculé par le MIFI dans Arrima."
+  >
+    <div class="grid gap-4 lg:grid-cols-[1fr_320px]">
+      <div class="bento grid gap-5 p-6 sm:grid-cols-2 sm:p-8" id="ar-form">
+        <label class="block">
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Âge</span>
+          <select data-ar class={selectClass}>
+            <option value="120" selected>18 – 30 ans (max)</option>
+            <option value="110">31 – 35 ans</option>
+            <option value="80">36 – 40 ans</option>
+            <option value="40">41 – 45 ans</option>
+            <option value="0">46 ans et plus</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Français oral (NCLC)</span>
+          <select data-ar class={selectClass}>
+            <option value="0">Sous NCLC 5</option>
+            <option value="38">NCLC 5 – 6</option>
+            <option value="100" selected>NCLC 7 – 8 (B2)</option>
+            <option value="160">NCLC 9 – 10 (C1)</option>
+            <option value="200">NCLC 11+ (C2)</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Niveau d'études</span>
+          <select data-ar class={selectClass}>
+            <option value="20">Secondaire</option>
+            <option value="60">DEC / BTS / 2 ans post-secondaire</option>
+            <option value="90" selected>Licence / Bachelor</option>
+            <option value="110">Master</option>
+            <option value="130">Doctorat</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Expérience professionnelle (5 dernières années)</span>
+          <select data-ar class={selectClass}>
+            <option value="0">Moins de 12 mois</option>
+            <option value="40">12 – 23 mois</option>
+            <option value="60" selected>24 – 35 mois</option>
+            <option value="80">36 – 47 mois</option>
+            <option value="100">48 mois et plus</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Domaine de formation (demande au Québec)</span>
+          <select data-ar class={selectClass}>
+            <option value="0">Faible demande</option>
+            <option value="60" selected>Demande moyenne</option>
+            <option value="120">Forte demande (santé, génie, TI, éducation…)</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Anglais oral (CLB)</span>
+          <select data-ar class={selectClass}>
+            <option value="0" selected>Aucun / faible</option>
+            <option value="20">CLB 5 – 8</option>
+            <option value="40">CLB 9+</option>
+          </select>
+        </label>
+        <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-navy-900/8 p-3.5 text-sm sm:col-span-2 dark:border-white/10">
+          <input type="checkbox" data-ar-check="180" class="mt-0.5 h-4 w-4 accent-brand-700" />
+          <span class="leading-snug text-navy-900/75 dark:text-white/70">Offre d'emploi validée au Québec (+180 pts hors Montréal / +120 à Montréal — estimation haute)</span>
+        </label>
+        <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-navy-900/8 p-3.5 text-sm sm:col-span-2 dark:border-white/10">
+          <input type="checkbox" data-ar-check="80" class="mt-0.5 h-4 w-4 accent-brand-700" />
+          <span class="leading-snug text-navy-900/75 dark:text-white/70">Diplôme ou expérience de travail au Québec (+80 pts)</span>
+        </label>
+      </div>
+
+      <aside class="bento h-fit bg-gradient-to-br from-brand-800 to-navy-950 p-7 !text-white lg:sticky lg:top-28">
+        <p class="text-xs font-bold tracking-[0.18em] uppercase text-white/50">Score estimé</p>
+        <p class="font-display mt-3 text-6xl font-bold" id="ar-total">0</p>
+        <p class="mt-1 text-sm text-white/55">points Arrima (indicatif)</p>
+        <div class="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
+          <div id="ar-gauge" class="h-full rounded-full bg-gradient-to-r from-brand-400 to-emerald-400 transition-all duration-500" style="width:0%"></div>
+        </div>
+        <p id="ar-verdict" class="mt-6 rounded-2xl bg-white/8 p-4 text-sm leading-relaxed text-white/80"></p>
+        <a href="/canada/arrima" class="btn-primary btn-md mt-5 w-full">Voir le programme Arrima</a>
+      </aside>
+    </div>
+  </ToolShell>
+</Base>
+
+<script>
+  const form = document.getElementById('ar-form')!;
+  const totalEl = document.getElementById('ar-total')!;
+  const gauge = document.getElementById('ar-gauge')!;
+  const verdict = document.getElementById('ar-verdict')!;
+  const MAX = 900;
+
+  function compute() {
+    let total = 0;
+    form.querySelectorAll<HTMLSelectElement>('select[data-ar]').forEach((s) => (total += Number(s.value)));
+    form.querySelectorAll<HTMLInputElement>('input[data-ar-check]').forEach((c) => {
+      if (c.checked) total += Number(c.dataset.arCheck);
+    });
+    totalEl.textContent = String(total);
+    gauge.style.width = `${Math.min(100, (total / MAX) * 100)}%`;
+    verdict.textContent =
+      total >= 620
+        ? 'Profil très compétitif : les invitations récentes ciblent ce niveau, surtout avec un bon français.'
+        : total >= 480
+          ? 'Profil dans la zone d’invitation des tirages ciblés (domaines en demande, francophones).'
+          : 'Score à renforcer : montez le français au NCLC 9+, ou visez un domaine de formation en forte demande.';
+  }
+
+  form.addEventListener('change', compute);
+  compute();
+</script>

@@ -1,0 +1,122 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { SITE } from '@/data/site';
+import { destinations } from '@/data/destinations';
+
+const crumbs = [
+  { name: 'Accueil', url: '/' },
+  { name: 'Prendre rendez-vous', url: '/rendez-vous' },
+];
+---
+
+<Base
+  title="Prendre rendez-vous — Consultation d'évaluation gratuite | Switch Point"
+  description="Réservez votre consultation d'évaluation gratuite avec un conseiller Switch Point : analyse de profil, programme recommandé et budget, en 30 minutes."
+  breadcrumbs={crumbs}
+>
+  <section class="relative overflow-hidden pt-10 pb-16">
+    <div class="aurora -top-24 left-1/3 h-96 w-96 bg-brand-500/18"></div>
+    <div class="relative mx-auto max-w-6xl px-4 sm:px-6">
+      <Breadcrumbs crumbs={crumbs} />
+
+      <div class="mt-8 grid gap-10 lg:grid-cols-[1fr_400px]">
+        <div data-reveal>
+          <p class="eyebrow">Rendez-vous</p>
+          <h1 class="font-display mt-3 text-4xl font-bold tracking-tight text-navy-900 sm:text-5xl dark:text-white">
+            30 minutes qui peuvent <span class="text-gradient">changer votre trajectoire.</span>
+          </h1>
+          <p class="section-sub">
+            La consultation d'évaluation est gratuite et sans engagement. Vous en sortez avec un verdict honnête sur votre profil, le programme le plus réaliste et un budget clair.
+          </p>
+
+          <div class="mt-8 space-y-4">
+            {
+              [
+                { icon: '🎯', title: 'Analyse de votre profil', text: 'Âge, diplômes, langues, expérience, budget : passage au crible des critères officiels.' },
+                { icon: '🗺️', title: 'Recommandation de programme', text: 'Le ou les programmes où vos chances sont réelles — et ceux à éviter.' },
+                { icon: '💰', title: 'Budget et calendrier', text: 'Coûts gouvernementaux, honoraires, échéances : tout est posé noir sur blanc.' },
+              ].map((s) => (
+                <div class="bento flex items-start gap-4 p-5">
+                  <span class="text-2xl">{s.icon}</span>
+                  <div>
+                    <h3 class="font-display font-bold text-navy-900 dark:text-white">{s.title}</h3>
+                    <p class="mt-1 text-sm text-navy-900/55 dark:text-white/50">{s.text}</p>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Formulaire → WhatsApp -->
+        <aside class="bento h-fit p-7 lg:sticky lg:top-28" data-reveal data-reveal-delay="0.1">
+          <h2 class="font-display text-xl font-bold text-navy-900 dark:text-white">Réserver mon créneau</h2>
+          <p class="mt-1.5 text-sm text-navy-900/55 dark:text-white/50">
+            Remplissez ces champs : votre demande part directement sur le WhatsApp de l'équipe.
+          </p>
+          <form id="rdv-form" class="mt-6 space-y-4">
+            <label class="block">
+              <span class="text-sm font-semibold text-navy-900 dark:text-white">Nom complet</span>
+              <input required name="name" type="text" placeholder="Ex. Marie Ngo" class="input mt-1.5" />
+            </label>
+            <label class="block">
+              <span class="text-sm font-semibold text-navy-900 dark:text-white">Destination visée</span>
+              <select name="dest" class="input mt-1.5">
+                <option value="Je ne sais pas encore">Je ne sais pas encore</option>
+                {destinations.map((d) => <option value={d.name}>{d.flag} {d.name}</option>)}
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-sm font-semibold text-navy-900 dark:text-white">Votre projet</span>
+              <select name="goal" class="input mt-1.5">
+                <option>Études</option>
+                <option>Travail</option>
+                <option>Résidence permanente</option>
+                <option>Visite / tourisme</option>
+                <option>Famille</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-sm font-semibold text-navy-900 dark:text-white">Créneau souhaité</span>
+              <select name="slot" class="input mt-1.5">
+                <option>Matin (8h – 12h)</option>
+                <option>Après-midi (12h – 18h)</option>
+                <option>Samedi matin</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-sm font-semibold text-navy-900 dark:text-white">Message (optionnel)</span>
+              <textarea name="msg" rows="3" placeholder="Décrivez brièvement votre situation…" class="input mt-1.5 resize-none"></textarea>
+            </label>
+            <button type="submit" class="btn-primary btn-lg w-full">
+              💬 Envoyer sur WhatsApp
+            </button>
+            <p class="text-center text-[11px] text-navy-900/40 dark:text-white/35">
+              Ou par email :
+              <a href={`mailto:${SITE.email}`} class="font-semibold text-brand-700 hover:underline dark:text-brand-300">{SITE.email}</a>
+            </p>
+          </form>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script define:vars={{ whatsapp: SITE.whatsapp }}>
+  document.getElementById('rdv-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const msg = [
+      'Bonjour Switch Point, je souhaite réserver une consultation gratuite.',
+      `👤 Nom : ${f.get('name')}`,
+      `🌍 Destination : ${f.get('dest')}`,
+      `🎯 Projet : ${f.get('goal')}`,
+      `🕑 Créneau : ${f.get('slot')}`,
+      f.get('msg') ? `📝 ${f.get('msg')}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n');
+    window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+  });
+</script>

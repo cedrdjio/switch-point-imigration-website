@@ -1,0 +1,112 @@
+---
+import Base from '@/layouts/Base.astro';
+import ToolShell from '@/components/ToolShell.astro';
+---
+
+<Base
+  title="Comparateur de destinations d'immigration 2026 | Switch Point"
+  description="Canada vs France vs Australie vs Lituanie : comparez coûts, délais, salaires, langue et voies vers la résidence permanente, côte à côte."
+>
+  <ToolShell
+    icon="⚖️"
+    name="Comparateur de destinations"
+    intro="Sélectionnez jusqu'à 3 destinations et comparez ce qui compte vraiment : budget d'entrée, délais, salaires, langue et perspectives de résidence."
+    disclaimer="Données moyennes indicatives 2025-2026 destinées à orienter la réflexion — chaque situation individuelle mérite une analyse dédiée."
+  >
+    <div class="bento p-6 sm:p-8">
+      <p class="text-sm font-semibold text-navy-900 dark:text-white">Destinations à comparer (max 3)</p>
+      <div id="cp-chips" class="mt-3 flex flex-wrap gap-2"></div>
+      <div class="mt-8 overflow-x-auto">
+        <table class="table-premium min-w-[560px]" id="cp-table"></table>
+      </div>
+    </div>
+  </ToolShell>
+</Base>
+
+<script>
+  interface Row {
+    name: string;
+    flag: string;
+    href: string;
+    budget: string;
+    delai: string;
+    langue: string;
+    salaire: string;
+    rp: string;
+    ideal: string;
+  }
+
+  const countries: Record<string, Row> = {
+    canada: { name: 'Canada', flag: '🇨🇦', href: '/canada', budget: '2 500 – 15 000 €', delai: '6 – 18 mois', langue: 'Français / Anglais', salaire: '~3 800 €/mois (médian)', rp: 'Directe (Express Entry, Arrima)', ideal: 'Profils qualifiés et étudiants visant la RP' },
+    france: { name: 'France', flag: '🇫🇷', href: '/france', budget: '1 500 – 10 000 €', delai: '2 – 4 mois', langue: 'Français', salaire: '~2 600 €/mois (médian)', rp: 'Progressive (titres de séjour → 10 ans)', ideal: 'Étudiants francophones' },
+    schengen: { name: 'Schengen', flag: '🇪🇺', href: '/schengen', budget: '300 – 1 500 €', delai: '2 – 6 semaines', langue: 'Selon pays', salaire: '—', rp: 'Non (court séjour)', ideal: 'Visites, affaires, tourisme' },
+    lituanie: { name: 'Lituanie', flag: '🇱🇹', href: '/lituanie', budget: '800 – 3 000 €', delai: '2 – 4 mois', langue: 'Anglais / Russe au travail', salaire: '~1 300 €/mois', rp: 'Après 5 ans (résidence UE)', ideal: 'Travailleurs cherchant l’entrée UE rapide' },
+    bulgarie: { name: 'Bulgarie', flag: '🇧🇬', href: '/bulgarie', budget: '600 – 2 500 €', delai: '2 – 4 mois', langue: 'Anglais au travail', salaire: '~1 000 €/mois', rp: 'Après 5 ans (résidence UE)', ideal: 'Budget d’entrée minimal vers l’UE' },
+    russie: { name: 'Russie', flag: '🇷🇺', href: '/russie', budget: '1 000 – 5 000 €', delai: '1 – 2 mois', langue: 'Russe (année préparatoire)', salaire: '—', rp: 'Possible après études/travail', ideal: 'Études économiques (médecine, ingénierie)' },
+    bielorussie: { name: 'Biélorussie', flag: '🇧🇾', href: '/bielorussie', budget: '800 – 4 000 €', delai: '1 – 2 mois', langue: 'Russe / filières anglophones', salaire: '—', rp: 'Limitée', ideal: 'Études au budget le plus serré' },
+    australie: { name: 'Australie', flag: '🇦🇺', href: '/australie', budget: '5 000 – 25 000 €', delai: '1 – 9 mois', langue: 'Anglais', salaire: '~4 900 €/mois (médian)', rp: 'Directe (189/190) ou après études', ideal: 'Anglophones qualifiés, hauts salaires' },
+    'nouvelle-zelande': { name: 'Nouvelle-Zélande', flag: '🇳🇿', href: '/nouvelle-zelande', budget: '3 000 – 15 000 €', delai: '1 – 6 mois', langue: 'Anglais', salaire: '~3 900 €/mois (médian)', rp: 'Green List : voie directe', ideal: 'Métiers en pénurie (santé, BTP, tech)' },
+  };
+
+  const rows: { key: keyof Row; label: string }[] = [
+    { key: 'budget', label: '💰 Budget total indicatif' },
+    { key: 'delai', label: '⏱ Délai de procédure' },
+    { key: 'langue', label: '💬 Langue requise' },
+    { key: 'salaire', label: '💵 Salaire indicatif' },
+    { key: 'rp', label: '🏠 Résidence permanente' },
+    { key: 'ideal', label: '🎯 Idéal pour' },
+  ];
+
+  let selected: string[] = ['canada', 'france', 'lituanie'];
+
+  const chipsWrap = document.getElementById('cp-chips')!;
+  const table = document.getElementById('cp-table')!;
+
+  function render() {
+    chipsWrap.innerHTML = Object.entries(countries)
+      .map(([k, c]) => {
+        const active = selected.includes(k);
+        return `<button data-k="${k}" class="rounded-full border px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
+          active
+            ? 'border-brand-700 bg-brand-700 text-white'
+            : 'border-navy-900/10 dark:border-white/12 text-navy-900/65 dark:text-white/60 hover:border-brand-500'
+        }">${c.flag} ${c.name}</button>`;
+      })
+      .join('');
+    chipsWrap.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
+      b.addEventListener('click', () => {
+        const k = b.dataset.k!;
+        if (selected.includes(k)) {
+          if (selected.length > 1) selected = selected.filter((x) => x !== k);
+        } else {
+          selected = [...selected, k].slice(-3);
+        }
+        render();
+      })
+    );
+
+    const cols = selected.map((k) => countries[k]!);
+    table.innerHTML = `
+      <thead><tr>
+        <th></th>
+        ${cols.map((c) => `<th class="!text-navy-900 dark:!text-white !text-sm !normal-case !tracking-normal"><a href="${c.href}" class="hover:text-brand-700">${c.flag} ${c.name}</a></th>`).join('')}
+      </tr></thead>
+      <tbody>
+        ${rows
+          .map(
+            (r) => `<tr>
+            <td class="font-semibold whitespace-nowrap">${r.label}</td>
+            ${cols.map((c) => `<td>${c[r.key]}</td>`).join('')}
+          </tr>`
+          )
+          .join('')}
+        <tr>
+          <td></td>
+          ${cols.map((c) => `<td><a href="${c.href}" class="text-sm font-bold text-brand-700 dark:text-brand-300 hover:underline">Explorer →</a></td>`).join('')}
+        </tr>
+      </tbody>
+    `;
+  }
+
+  render();
+</script>

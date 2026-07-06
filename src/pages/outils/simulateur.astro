@@ -1,0 +1,323 @@
+---
+import Base from '@/layouts/Base.astro';
+import ToolShell from '@/components/ToolShell.astro';
+---
+
+<Base
+  title="Simulateur d'éligibilité immigration — Gratuit en 2 minutes | Switch Point"
+  description="Répondez à 8 questions et découvrez quels programmes d'immigration (Canada, France, Europe, Océanie) correspondent réellement à votre profil."
+>
+  <ToolShell
+    icon="🎯"
+    name="Simulateur d'éligibilité"
+    intro="8 questions, 2 minutes : notre moteur croise votre profil avec les critères des 9 destinations et classe les programmes par compatibilité."
+    disclaimer="Résultat indicatif basé sur les critères publics des programmes. Seule une évaluation par un consultant (et, in fine, les autorités d'immigration) fait foi."
+  >
+    <div id="sim" class="bento mx-auto max-w-2xl p-6 sm:p-10">
+      <!-- Barre de progression -->
+      <div class="mb-8 flex items-center gap-3">
+        <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-navy-900/8 dark:bg-white/10">
+          <div id="sim-bar" class="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-700 transition-all duration-500" style="width: 12%"></div>
+        </div>
+        <span id="sim-count" class="text-xs font-bold text-navy-900/50 dark:text-white/45">1/8</span>
+      </div>
+
+      <div id="sim-questions"></div>
+
+      <div id="sim-result" class="hidden">
+        <div class="text-center">
+          <span class="text-4xl">🧭</span>
+          <h2 class="font-display mt-3 text-2xl font-bold text-navy-900 dark:text-white">Vos programmes recommandés</h2>
+          <p class="mt-2 text-sm text-navy-900/55 dark:text-white/50">Classés par compatibilité avec votre profil.</p>
+        </div>
+        <div id="sim-matches" class="mt-8 space-y-3"></div>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="/rendez-vous" class="btn-primary btn-lg flex-1">Valider avec un expert</a>
+          <button id="sim-restart" class="btn-secondary btn-lg">↺ Recommencer</button>
+        </div>
+      </div>
+    </div>
+  </ToolShell>
+</Base>
+
+<script>
+  interface Answers {
+    goal: string;
+    age: string;
+    education: string;
+    french: string;
+    english: string;
+    experience: string;
+    budget: string;
+    family: string;
+  }
+
+  const questions = [
+    {
+      key: 'goal',
+      title: 'Quel est votre objectif principal ?',
+      options: [
+        { v: 'study', label: '🎓 Étudier à l’étranger' },
+        { v: 'work', label: '💼 Travailler à l’étranger' },
+        { v: 'pr', label: '🏠 M’installer définitivement' },
+        { v: 'visit', label: '🧳 Visiter / tourisme / affaires' },
+      ],
+    },
+    {
+      key: 'age',
+      title: 'Quel est votre âge ?',
+      options: [
+        { v: '18-24', label: '18 – 24 ans' },
+        { v: '25-29', label: '25 – 29 ans' },
+        { v: '30-35', label: '30 – 35 ans' },
+        { v: '36-45', label: '36 – 45 ans' },
+        { v: '46+', label: '46 ans et plus' },
+      ],
+    },
+    {
+      key: 'education',
+      title: 'Votre plus haut niveau d’études ?',
+      options: [
+        { v: 'none', label: 'Secondaire non terminé' },
+        { v: 'highschool', label: 'Baccalauréat (fin du secondaire)' },
+        { v: 'bachelor', label: 'Licence / Bachelor / BTS' },
+        { v: 'master', label: 'Master / Doctorat' },
+      ],
+    },
+    {
+      key: 'french',
+      title: 'Votre niveau de français ?',
+      options: [
+        { v: 'native', label: 'Courant / langue première' },
+        { v: 'b2', label: 'Bon (B2 et plus)' },
+        { v: 'b1', label: 'Moyen (A2–B1)' },
+        { v: 'none', label: 'Faible ou nul' },
+      ],
+    },
+    {
+      key: 'english',
+      title: 'Votre niveau d’anglais ?',
+      options: [
+        { v: 'good', label: 'Bon à courant (B2+)' },
+        { v: 'mid', label: 'Moyen (A2–B1)' },
+        { v: 'none', label: 'Faible ou nul' },
+      ],
+    },
+    {
+      key: 'experience',
+      title: 'Votre expérience professionnelle qualifiée ?',
+      options: [
+        { v: '0', label: 'Aucune / étudiant' },
+        { v: '1-3', label: '1 à 3 ans' },
+        { v: '3-5', label: '3 à 5 ans' },
+        { v: '5+', label: 'Plus de 5 ans' },
+      ],
+    },
+    {
+      key: 'budget',
+      title: 'Quel budget pouvez-vous mobiliser pour le projet ?',
+      options: [
+        { v: 'low', label: 'Moins de 3 000 €' },
+        { v: 'mid', label: '3 000 – 8 000 €' },
+        { v: 'high', label: '8 000 – 15 000 €' },
+        { v: 'vhigh', label: 'Plus de 15 000 €' },
+      ],
+    },
+    {
+      key: 'family',
+      title: 'Partez-vous seul(e) ou en famille ?',
+      options: [
+        { v: 'solo', label: 'Seul(e)' },
+        { v: 'couple', label: 'En couple' },
+        { v: 'kids', label: 'En famille avec enfants' },
+      ],
+    },
+  ];
+
+  interface Match {
+    name: string;
+    flag: string;
+    href: string;
+    score: number;
+    note: string;
+  }
+
+  function computeMatches(a: Answers): Match[] {
+    const young = a.age === '18-24' || a.age === '25-29';
+    const under36 = young || a.age === '30-35';
+    const edu2 = a.education === 'bachelor' || a.education === 'master';
+    const fr = a.french === 'native' || a.french === 'b2';
+    const en = a.english === 'good';
+    const exp = a.experience !== '0';
+    const exp3 = a.experience === '3-5' || a.experience === '5+';
+    const budgetMid = a.budget !== 'low';
+    const budgetHigh = a.budget === 'high' || a.budget === 'vhigh';
+
+    const m: Match[] = [];
+    const clamp = (n: number) => Math.max(8, Math.min(96, Math.round(n)));
+
+    if (a.goal === 'study') {
+      m.push({
+        name: 'France — Visa étudiant', flag: '🇫🇷', href: '/france/etudes',
+        score: clamp(40 + (fr ? 25 : 0) + (edu2 || a.education === 'highschool' ? 15 : -10) + (budgetMid ? 12 : -6) + (young ? 4 : -8)),
+        note: fr ? 'Votre français est un atout direct pour Campus France.' : 'Un niveau B2 de français sera nécessaire pour la plupart des formations.',
+      });
+      m.push({
+        name: "Canada — Permis d'études", flag: '🇨🇦', href: '/canada/etudes',
+        score: clamp(35 + (budgetHigh ? 25 : a.budget === 'mid' ? 5 : -15) + (fr || en ? 15 : -5) + (young ? 10 : -5)),
+        note: budgetHigh ? 'Votre budget permet de viser la preuve financière exigée.' : 'La preuve de fonds (20 635 CAD + scolarité) est le point à sécuriser.',
+      });
+      m.push({
+        name: 'Russie — Visa étudiant', flag: '🇷🇺', href: '/russie/etudes',
+        score: clamp(55 + (a.budget === 'low' ? 15 : 5) + (young ? 8 : 0)),
+        note: 'Budget minimal et admission rapide : la voie économique par excellence.',
+      });
+      m.push({
+        name: 'Biélorussie — Visa étudiant', flag: '🇧🇾', href: '/bielorussie/etudes',
+        score: clamp(52 + (a.budget === 'low' ? 18 : 4) + (young ? 6 : 0)),
+        note: 'Le coût total études + vie le plus bas de notre catalogue.',
+      });
+      m.push({
+        name: 'Australie — Visa étudiant 500', flag: '🇦🇺', href: '/australie/etudes',
+        score: clamp(25 + (en ? 22 : -12) + (budgetHigh ? 20 : -12) + (young ? 6 : 0)),
+        note: en ? 'Votre anglais ouvre la porte du Genuine Student.' : 'IELTS 6.0+ requis — à préparer en amont.',
+      });
+    }
+
+    if (a.goal === 'work' || a.goal === 'pr') {
+      m.push({
+        name: 'Canada — Express Entry', flag: '🇨🇦', href: '/canada/express-entry',
+        score: clamp(20 + (fr ? 24 : 0) + (en ? 10 : 0) + (edu2 ? 15 : -10) + (exp3 ? 15 : exp ? 8 : -15) + (under36 ? 10 : -12)),
+        note: fr ? 'Les tirages francophones sont votre meilleure porte d’entrée.' : 'Sans français ni anglais solide, le score CRS restera bloquant.',
+      });
+      m.push({
+        name: 'Canada — Arrima (Québec)', flag: '🇨🇦', href: '/canada/arrima',
+        score: clamp(22 + (fr ? 30 : a.french === 'b1' ? 8 : -15) + (edu2 ? 12 : 0) + (exp ? 12 : -8) + (under36 ? 8 : -6)),
+        note: fr ? 'Profil francophone : le Québec vous cherche littéralement.' : 'Le français B2 est le prérequis n°1 d’Arrima.',
+      });
+      m.push({
+        name: 'Lituanie — Permis de travail', flag: '🇱🇹', href: '/lituanie/travail',
+        score: clamp(45 + (exp ? 20 : -10) + (a.budget !== 'low' ? 8 : 0) + (a.education === 'none' || a.education === 'highschool' ? 10 : 4)),
+        note: 'Accessible sans diplôme supérieur : l’expérience métier prime.',
+      });
+      m.push({
+        name: 'Bulgarie — Permis de travail', flag: '🇧🇬', href: '/bulgarie/travail',
+        score: clamp(42 + (exp ? 18 : -8) + (a.budget === 'low' ? 8 : 4)),
+        note: 'Procédure pilotée par l’employeur, budget d’entrée réduit.',
+      });
+      m.push({
+        name: 'Nouvelle-Zélande — AEWV', flag: '🇳🇿', href: '/nouvelle-zelande/travail',
+        score: clamp(25 + (en ? 20 : -12) + (exp3 ? 18 : exp ? 8 : -12) + (edu2 ? 6 : 0)),
+        note: en ? 'Votre anglais + expérience collent au format AEWV.' : 'Un anglais fonctionnel est requis pour la plupart des métiers.',
+      });
+      m.push({
+        name: 'Australie — Visas qualifiés', flag: '🇦🇺', href: '/australie/travail',
+        score: clamp(15 + (en ? 22 : -15) + (edu2 ? 15 : -10) + (exp3 ? 15 : 0) + (under36 ? 10 : -15)),
+        note: 'Sélectif : anglais fort, diplôme évalué et métier en demande.',
+      });
+    }
+
+    if (a.goal === 'visit') {
+      m.push({
+        name: 'Espace Schengen — Visa visiteur', flag: '🇪🇺', href: '/schengen/visiteur',
+        score: clamp(50 + (budgetMid ? 18 : -10) + (exp ? 12 : 0)),
+        note: 'Un dossier d’attaches solide est la clé — 27 pays avec un visa.',
+      });
+      m.push({
+        name: 'Canada — Visa visiteur', flag: '🇨🇦', href: '/canada/visiteur',
+        score: clamp(42 + (budgetMid ? 16 : -10) + (exp ? 12 : 0)),
+        note: 'Multi-entrées jusqu’à 10 ans si le dossier est convaincant.',
+      });
+      m.push({
+        name: 'France — Visa visiteur', flag: '🇫🇷', href: '/france/visiteur',
+        score: clamp(48 + (budgetMid ? 16 : -8) + (exp ? 10 : 0)),
+        note: 'Court séjour Schengen via la France, destination familière.',
+      });
+      m.push({
+        name: 'Australie — Visa visiteur 600', flag: '🇦🇺', href: '/australie/visiteur',
+        score: clamp(38 + (budgetHigh ? 14 : 0) + (exp ? 8 : 0)),
+        note: 'Demande 100 % en ligne, séjours jusqu’à 12 mois.',
+      });
+    }
+
+    return m.sort((x, y) => y.score - x.score).slice(0, 5);
+  }
+
+  /* ── UI ── */
+  const answers: Partial<Answers> = {};
+  let step = 0;
+
+  const qWrap = document.getElementById('sim-questions')!;
+  const result = document.getElementById('sim-result')!;
+  const bar = document.getElementById('sim-bar')!;
+  const count = document.getElementById('sim-count')!;
+  const matchesWrap = document.getElementById('sim-matches')!;
+
+  function render() {
+    const q = questions[step];
+    if (!q) return showResult();
+    bar.style.width = `${((step + 1) / questions.length) * 100}%`;
+    count.textContent = `${step + 1}/${questions.length}`;
+    qWrap.innerHTML = `
+      <h2 class="font-display text-xl sm:text-2xl font-bold text-navy-900 dark:text-white">${q.title}</h2>
+      <div class="mt-6 grid gap-2.5">
+        ${q.options
+          .map(
+            (o) => `
+          <button data-v="${o.v}" class="sim-opt group flex items-center justify-between rounded-2xl border border-navy-900/10 dark:border-white/12 px-5 py-4 text-left text-sm font-semibold text-navy-900 dark:text-white transition-all duration-200 hover:border-brand-500 hover:bg-brand-500/5">
+            ${o.label}
+            <span class="flex h-6 w-6 items-center justify-center rounded-full border border-navy-900/15 dark:border-white/20 text-[10px] opacity-0 transition-opacity group-hover:opacity-100 text-brand-600">→</span>
+          </button>`
+          )
+          .join('')}
+      </div>
+      ${step > 0 ? '<button id="sim-back" class="mt-5 text-sm font-semibold text-navy-900/45 dark:text-white/40 hover:text-brand-700">← Question précédente</button>' : ''}
+    `;
+    qWrap.querySelectorAll<HTMLButtonElement>('.sim-opt').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        (answers as Record<string, string>)[q.key] = btn.dataset.v!;
+        step++;
+        render();
+      })
+    );
+    document.getElementById('sim-back')?.addEventListener('click', () => {
+      step--;
+      render();
+    });
+  }
+
+  function showResult() {
+    bar.style.width = '100%';
+    count.textContent = '✓';
+    qWrap.classList.add('hidden');
+    result.classList.remove('hidden');
+    const matches = computeMatches(answers as Answers);
+    matchesWrap.innerHTML = matches
+      .map((m, i) => {
+        const tone = m.score >= 70 ? 'bg-emerald-500' : m.score >= 50 ? 'bg-brand-500' : 'bg-amber-500';
+        const label = m.score >= 70 ? 'Très compatible' : m.score >= 50 ? 'Compatible' : 'À renforcer';
+        return `
+        <a href="${m.href}" class="block rounded-2xl border border-navy-900/10 dark:border-white/12 p-5 transition-all hover:border-brand-500 hover:shadow-soft">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-sm font-bold text-navy-900 dark:text-white">${i + 1}. ${m.flag} ${m.name}</span>
+            <span class="text-xs font-bold ${m.score >= 70 ? 'text-emerald-600' : m.score >= 50 ? 'text-brand-600' : 'text-amber-600'}">${label} · ${m.score}%</span>
+          </div>
+          <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-navy-900/8 dark:bg-white/10">
+            <div class="h-full rounded-full ${tone}" style="width:${m.score}%"></div>
+          </div>
+          <p class="mt-3 text-xs leading-relaxed text-navy-900/55 dark:text-white/50">${m.note}</p>
+        </a>`;
+      })
+      .join('');
+  }
+
+  document.getElementById('sim-restart')?.addEventListener('click', () => {
+    step = 0;
+    Object.keys(answers).forEach((k) => delete (answers as Record<string, string>)[k]);
+    result.classList.add('hidden');
+    qWrap.classList.remove('hidden');
+    render();
+  });
+
+  render();
+</script>

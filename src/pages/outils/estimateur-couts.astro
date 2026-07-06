@@ -1,0 +1,75 @@
+---
+import Base from '@/layouts/Base.astro';
+import ToolShell from '@/components/ToolShell.astro';
+import { allPrograms } from '@/data/destinations';
+---
+
+<Base
+  title="Estimateur de coûts visa et immigration 2026 | Switch Point"
+  description="Le coût réel de chaque procédure d'immigration : frais gouvernementaux détaillés pour le Canada, la France, l'Europe et l'Océanie."
+>
+  <ToolShell
+    icon="💰"
+    name="Estimateur de coûts"
+    intro="Sélectionnez un programme : les frais gouvernementaux officiels s'affichent, poste par poste. Zéro surprise."
+    disclaimer="Frais officiels indicatifs susceptibles d'évoluer. Hors frais d'agence, de tests de langue et de traduction — chiffrés lors de votre consultation."
+  >
+    <div class="bento mx-auto max-w-3xl p-6 sm:p-8">
+      <label class="block">
+        <span class="text-sm font-semibold text-navy-900 dark:text-white">Choisissez votre programme</span>
+        <select id="ec-select" class="input mt-2">
+          {
+            allPrograms.map(({ destination, program }, i) => (
+              <option value={`${destination.slug}-${program.slug}`} selected={i === 0}>
+                {destination.flag} {destination.name} — {program.name}
+              </option>
+            ))
+          }
+        </select>
+      </label>
+
+      {
+        allPrograms.map(({ destination, program }, i) => (
+          <div data-ec-panel={`${destination.slug}-${program.slug}`} class={i === 0 ? 'mt-6' : 'mt-6 hidden'}>
+            <div class="overflow-x-auto">
+              <table class="table-premium">
+                <thead>
+                  <tr><th>Frais officiels</th><th class="!text-right">Montant</th></tr>
+                </thead>
+                <tbody>
+                  {program.governmentFees.map((f) => (
+                    <tr>
+                      <td>{f.label}</td>
+                      <td class="!text-right font-semibold whitespace-nowrap">{f.amount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div class="mt-5 grid gap-3 sm:grid-cols-2">
+              <div class="rounded-2xl bg-brand-500/8 p-4 text-sm">
+                <p class="font-bold text-navy-900 dark:text-white">⏱ Délai</p>
+                <p class="mt-1 text-navy-900/60 dark:text-white/55">{program.processingTime}</p>
+              </div>
+              <div class="rounded-2xl bg-brand-500/8 p-4 text-sm">
+                <p class="font-bold text-navy-900 dark:text-white">🤝 Honoraires d'agence</p>
+                <p class="mt-1 text-navy-900/60 dark:text-white/55">Communiqués après évaluation gratuite — transparents et contractuels.</p>
+              </div>
+            </div>
+            <a href={`/${destination.slug}/${program.slug}`} class="btn-secondary btn-md mt-5 w-full">
+              Voir la page complète du programme →
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </ToolShell>
+</Base>
+
+<script>
+  const select = document.getElementById('ec-select') as HTMLSelectElement;
+  const panels = document.querySelectorAll<HTMLElement>('[data-ec-panel]');
+  select.addEventListener('change', () => {
+    panels.forEach((p) => p.classList.toggle('hidden', p.dataset.ecPanel !== select.value));
+  });
+</script>

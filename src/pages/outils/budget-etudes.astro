@@ -1,0 +1,168 @@
+---
+import Base from '@/layouts/Base.astro';
+import ToolShell from '@/components/ToolShell.astro';
+---
+
+<Base
+  title="Calculateur de budget études à l'étranger 2026 | Switch Point"
+  description="Chiffrez votre projet d'études au Canada, en France, en Australie, en Russie… : scolarité, logement, visa, billet, assurance. Total en FCFA."
+>
+  <ToolShell
+    icon="🎓"
+    name="Calculateur de budget études"
+    intro="Choisissez une destination et un train de vie : obtenez le budget réel de votre première année, poste par poste, converti en FCFA."
+    disclaimer="Montants moyens indicatifs (frais 2025-2026, taux de change arrondis). Les coûts varient selon l'établissement, la ville et le mode de vie."
+  >
+    <div class="grid gap-4 lg:grid-cols-[1fr_340px]">
+      <div class="bento space-y-6 p-6 sm:p-8" id="be-form">
+        <div>
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Destination</span>
+          <div class="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4" id="be-countries"></div>
+        </div>
+        <div>
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Type de programme</span>
+          <div class="mt-3 grid grid-cols-2 gap-2" id="be-levels"></div>
+        </div>
+        <div>
+          <span class="text-sm font-semibold text-navy-900 dark:text-white">Train de vie</span>
+          <div class="mt-3 grid grid-cols-3 gap-2" id="be-lifestyles"></div>
+        </div>
+      </div>
+
+      <aside class="bento h-fit p-7 lg:sticky lg:top-28">
+        <p class="text-xs font-bold tracking-[0.18em] uppercase text-navy-900/40 dark:text-white/40">Budget 1re année</p>
+        <p class="font-display mt-3 text-4xl font-bold text-brand-700 dark:text-brand-300" id="be-total">—</p>
+        <p class="mt-1 text-sm text-navy-900/50 dark:text-white/45" id="be-total-fcfa"></p>
+        <dl class="mt-6 space-y-3 border-t border-navy-900/8 pt-5 text-sm dark:border-white/10" id="be-lines"></dl>
+        <a href="/rendez-vous" class="btn-primary btn-md mt-6 w-full">Financer ce projet — parlons-en</a>
+      </aside>
+    </div>
+  </ToolShell>
+</Base>
+
+<script>
+  interface CountryData {
+    name: string;
+    flag: string;
+    currency: string;
+    rate: number; // 1 unité → FCFA (approx.)
+    tuition: Record<string, number>;
+    living: Record<string, number>; // par an
+    visa: number;
+    insurance: number;
+    flight: number; // FCFA directement ? Non, en devise locale approx
+  }
+
+  const data: Record<string, CountryData> = {
+    canada: {
+      name: 'Canada', flag: '🇨🇦', currency: 'CAD', rate: 440,
+      tuition: { licence: 22000, master: 20000 },
+      living: { eco: 15000, normal: 20635, confort: 27000 },
+      visa: 235, insurance: 800, flight: 2600,
+    },
+    france: {
+      name: 'France', flag: '🇫🇷', currency: 'EUR', rate: 656,
+      tuition: { licence: 3879, master: 3500 },
+      living: { eco: 7380, normal: 9600, confort: 13200 },
+      visa: 253, insurance: 300, flight: 900,
+    },
+    australie: {
+      name: 'Australie', flag: '🇦🇺', currency: 'AUD', rate: 400,
+      tuition: { licence: 32000, master: 36000 },
+      living: { eco: 24000, normal: 29710, confort: 38000 },
+      visa: 1600, insurance: 650, flight: 3200,
+    },
+    'nouvelle-zelande': {
+      name: 'Nouvelle-Zélande', flag: '🇳🇿', currency: 'NZD', rate: 370,
+      tuition: { licence: 28000, master: 32000 },
+      living: { eco: 17000, normal: 20000, confort: 26000 },
+      visa: 750, insurance: 700, flight: 3600,
+    },
+    lituanie: {
+      name: 'Lituanie', flag: '🇱🇹', currency: 'EUR', rate: 656,
+      tuition: { licence: 3000, master: 4200 },
+      living: { eco: 4800, normal: 6600, confort: 9000 },
+      visa: 300, insurance: 250, flight: 1000,
+    },
+    russie: {
+      name: 'Russie', flag: '🇷🇺', currency: 'USD', rate: 600,
+      tuition: { licence: 3500, master: 4200 },
+      living: { eco: 2400, normal: 3600, confort: 6000 },
+      visa: 120, insurance: 200, flight: 1100,
+    },
+    bielorussie: {
+      name: 'Biélorussie', flag: '🇧🇾', currency: 'USD', rate: 600,
+      tuition: { licence: 3000, master: 3600 },
+      living: { eco: 1800, normal: 2800, confort: 4500 },
+      visa: 110, insurance: 180, flight: 1200,
+    },
+  };
+
+  const levels = [
+    { k: 'licence', label: '🎓 Licence / Bachelor' },
+    { k: 'master', label: '📖 Master' },
+  ];
+  const lifestyles = [
+    { k: 'eco', label: 'Économe' },
+    { k: 'normal', label: 'Standard' },
+    { k: 'confort', label: 'Confort' },
+  ];
+
+  let country = 'canada';
+  let level = 'licence';
+  let lifestyle = 'normal';
+
+  const chip = (active: boolean) =>
+    `rounded-2xl border px-3 py-2.5 text-xs sm:text-sm font-semibold transition-all ${
+      active
+        ? 'border-brand-700 bg-brand-700 text-white'
+        : 'border-navy-900/10 dark:border-white/12 text-navy-900/70 dark:text-white/65 hover:border-brand-500'
+    }`;
+
+  const fmt = (n: number, cur: string) => `${Math.round(n).toLocaleString('fr-FR')} ${cur}`;
+
+  function render() {
+    const cWrap = document.getElementById('be-countries')!;
+    cWrap.innerHTML = Object.entries(data)
+      .map(([k, c]) => `<button data-c="${k}" class="${chip(k === country)}">${c.flag} ${c.name}</button>`)
+      .join('');
+    cWrap.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
+      b.addEventListener('click', () => { country = b.dataset.c!; render(); })
+    );
+
+    const lWrap = document.getElementById('be-levels')!;
+    lWrap.innerHTML = levels.map((l) => `<button data-l="${l.k}" class="${chip(l.k === level)}">${l.label}</button>`).join('');
+    lWrap.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
+      b.addEventListener('click', () => { level = b.dataset.l!; render(); })
+    );
+
+    const sWrap = document.getElementById('be-lifestyles')!;
+    sWrap.innerHTML = lifestyles.map((s) => `<button data-s="${s.k}" class="${chip(s.k === lifestyle)}">${s.label}</button>`).join('');
+    sWrap.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
+      b.addEventListener('click', () => { lifestyle = b.dataset.s!; render(); })
+    );
+
+    const c = data[country]!;
+    const lines = [
+      { label: 'Frais de scolarité (1 an)', v: c.tuition[level]! },
+      { label: 'Frais de vie (1 an)', v: c.living[lifestyle]! },
+      { label: 'Visa et frais officiels', v: c.visa },
+      { label: 'Assurance santé', v: c.insurance },
+      { label: 'Billet d’avion (aller)', v: c.flight },
+    ];
+    const total = lines.reduce((s, l) => s + l.v, 0);
+
+    document.getElementById('be-total')!.textContent = fmt(total, c.currency);
+    document.getElementById('be-total-fcfa')!.textContent = `≈ ${(total * c.rate).toLocaleString('fr-FR')} FCFA`;
+    document.getElementById('be-lines')!.innerHTML = lines
+      .map(
+        (l) => `<div class="flex justify-between gap-4">
+          <dt class="text-navy-900/55 dark:text-white/50">${l.label}</dt>
+          <dd class="font-semibold text-navy-900 dark:text-white whitespace-nowrap">${fmt(l.v, c.currency)}</dd>
+        </div>`
+      )
+      .join('');
+  }
+
+  render();
+</script>

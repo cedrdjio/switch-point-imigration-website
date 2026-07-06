@@ -1,0 +1,54 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import DestinationCard from '@/components/DestinationCard.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import { destinations, regions } from '@/data/destinations';
+
+const crumbs = [
+  { name: 'Accueil', url: '/' },
+  { name: 'Destinations', url: '/destinations' },
+];
+---
+
+<Base
+  title="Destinations — Canada, France, Europe, Océanie | Switch Point Immigration"
+  description="Explorez nos 9 destinations d'immigration : Canada, France, Espace Schengen, Lituanie, Bulgarie, Russie, Biélorussie, Australie et Nouvelle-Zélande. Programmes, coûts et délais."
+  breadcrumbs={crumbs}
+>
+  <section class="relative overflow-hidden pt-10 pb-8">
+    <div class="aurora -top-20 left-1/3 h-96 w-96 bg-brand-500/20"></div>
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+      <Breadcrumbs crumbs={crumbs} />
+      <div class="mt-8 max-w-3xl" data-reveal>
+        <p class="eyebrow">Destinations</p>
+        <h1 class="font-display mt-3 text-4xl font-bold tracking-tight text-navy-900 sm:text-5xl dark:text-white">
+          Neuf pays. <span class="text-gradient">Un point de départ : vous.</span>
+        </h1>
+        <p class="section-sub">
+          Chaque destination a ses règles, ses coûts et ses opportunités. Explorez les programmes en détail — ou laissez notre simulateur trouver le pays qui correspond à votre profil.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="/outils/simulateur" class="btn-primary btn-md">🎯 Trouver ma destination</a>
+          <a href="/outils/comparateur" class="btn-secondary btn-md">⚖️ Comparer les pays</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    regions.map((region) => {
+      const items = destinations.filter((d) => d.region === region);
+      return (
+        <section class="mx-auto mt-14 max-w-7xl px-4 sm:px-6">
+          <SectionHead eyebrow={region} title={region === 'Europe' ? 'L’Europe, du Schengen à la Baltique' : region === 'Océanie' ? 'L’Océanie, salaires et qualité de vie' : 'Le Canada et l’Amérique du Nord'} />
+          <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+            {items.map((d) => (
+              <DestinationCard destination={d} size={d.featured ? 'lg' : 'md'} />
+            ))}
+          </div>
+        </section>
+      );
+    })
+  }
+</Base>

@@ -1,0 +1,36 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ToolCard from '@/components/ToolCard.astro';
+import { tools } from '@/data/tools';
+
+const crumbs = [
+  { name: 'Accueil', url: '/' },
+  { name: 'Outils', url: '/outils' },
+];
+---
+
+<Base
+  title="Outils d'immigration gratuits — Simulateurs et calculateurs | Switch Point"
+  description="Simulateur d'éligibilité, calculateur CRS, budget études, comparateur de destinations : 8 outils gratuits pour préparer votre projet d'immigration."
+  breadcrumbs={crumbs}
+>
+  <section class="relative overflow-hidden pt-10 pb-8">
+    <div class="aurora -top-20 right-1/4 h-96 w-96 bg-brand-500/20"></div>
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+      <Breadcrumbs crumbs={crumbs} />
+      <div class="mt-8 max-w-3xl" data-reveal>
+        <p class="eyebrow">Boîte à outils</p>
+        <h1 class="font-display mt-3 text-4xl font-bold tracking-tight text-navy-900 sm:text-5xl dark:text-white">
+          Décidez avec des <span class="text-gradient">chiffres</span>, pas des rumeurs.
+        </h1>
+        <p class="section-sub">
+          Les mêmes instruments que nos consultants, en libre accès : simulez, calculez, comparez avant de vous engager. Gratuit, sans inscription.
+        </p>
+      </div>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+        {tools.map((t) => <ToolCard tool={t} />)}
+      </div>
+    </div>
+  </section>
+</Base>

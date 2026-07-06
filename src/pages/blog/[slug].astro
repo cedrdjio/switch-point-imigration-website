@@ -1,0 +1,110 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { articles, type Article } from '@/data/blog';
+import { SITE } from '@/data/site';
+
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+}
+
+interface Props {
+  a: Article;
+}
+const { a } = Astro.props;
+
+const crumbs = [
+  { name: 'Accueil', url: '/' },
+  { name: 'Blog', url: '/blog' },
+  { name: a.title, url: `/blog/${a.slug}` },
+];
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: a.title,
+  description: a.excerpt,
+  datePublished: a.date,
+  author: { '@type': 'Organization', name: SITE.name },
+  publisher: { '@type': 'Organization', name: SITE.name, logo: { '@type': 'ImageObject', url: `${SITE.url}/images/logo.png` } },
+  mainEntityOfPage: `${SITE.url}/blog/${a.slug}`,
+};
+
+const others = articles.filter((x) => x.slug !== a.slug).slice(0, 3);
+const fmtDate = (d: string) =>
+  new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+/** Rendu markdown-light : lignes "## " → h2, sinon paragraphe */
+const blocks = a.body.map((b) =>
+  b.startsWith('## ') ? { type: 'h2' as const, text: b.slice(3) } : { type: 'p' as const, text: b }
+);
+---
+
+<Base
+  title={`${a.title} | Blog Switch Point`}
+  description={a.excerpt}
+  ogType="article"
+  breadcrumbs={crumbs}
+  schema={[articleSchema]}
+>
+  <article class="relative overflow-hidden pt-10">
+    <div class="aurora -top-24 right-1/4 h-96 w-96 bg-brand-500/15"></div>
+    <div class="relative mx-auto max-w-3xl px-4 sm:px-6">
+      <Breadcrumbs crumbs={[crumbs[0]!, crumbs[1]!, { name: 'Article', url: crumbs[2]!.url }]} />
+
+      <header class="mt-8" data-reveal>
+        <div class="flex flex-wrap items-center gap-2 text-xs text-navy-900/45 dark:text-white/40">
+          <span class="badge">{a.category}</span>
+          <span>{fmtDate(a.date)}</span>
+          <span>· {a.readTime} de lecture</span>
+        </div>
+        <h1 class="font-display mt-4 text-3xl leading-tight font-bold tracking-tight text-navy-900 sm:text-4xl dark:text-white">
+          {a.title}
+        </h1>
+        <p class="mt-4 text-lg leading-relaxed text-navy-900/60 dark:text-white/55">{a.excerpt}</p>
+      </header>
+
+      <div class={`mt-8 flex h-52 items-center justify-center rounded-4xl bg-gradient-to-br text-7xl ${a.gradient}`} data-reveal>
+        {a.emoji}
+      </div>
+
+      <div class="prose-premium mt-10" data-reveal>
+        {blocks.map((b) => (b.type === 'h2' ? <h2>{b.text}</h2> : <p>{b.text}</p>))}
+      </div>
+
+      <!-- CTA article -->
+      <div class="bento mt-12 flex flex-col items-center gap-4 p-8 text-center sm:flex-row sm:text-left" data-reveal>
+        <span class="text-4xl">🧭</span>
+        <div class="flex-1">
+          <h2 class="font-display text-lg font-bold text-navy-900 dark:text-white">Ce sujet concerne votre projet ?</h2>
+          <p class="mt-1 text-sm text-navy-900/55 dark:text-white/50">
+            Nos consultants transforment ces règles en stratégie personnalisée. Première évaluation gratuite.
+          </p>
+        </div>
+        <a href="/rendez-vous" class="btn-primary btn-md shrink-0">Prendre rendez-vous</a>
+      </div>
+    </div>
+
+    <!-- À lire ensuite -->
+    <div class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
+      <h2 class="font-display text-2xl font-bold text-navy-900 dark:text-white" data-reveal>À lire ensuite</h2>
+      <div class="mt-6 grid gap-4 md:grid-cols-3" data-reveal-group>
+        {
+          others.map((o) => (
+            <a href={`/blog/${o.slug}`} class="bento bento-hover group flex flex-col overflow-hidden" data-reveal-item>
+              <div class={`flex h-28 items-center justify-center bg-gradient-to-br text-4xl ${o.gradient}`}>
+                <span class="transition-transform duration-500 group-hover:scale-125">{o.emoji}</span>
+              </div>
+              <div class="flex flex-1 flex-col p-5">
+                <span class="text-xs text-navy-900/45 dark:text-white/40">{o.category} · {o.readTime}</span>
+                <h3 class="font-display mt-2 flex-1 text-sm leading-snug font-bold text-navy-900 group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">
+                  {o.title}
+                </h3>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </article>
+</Base>

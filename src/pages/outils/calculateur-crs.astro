@@ -1,0 +1,165 @@
+---
+import Base from '@/layouts/Base.astro';
+import ToolShell from '@/components/ToolShell.astro';
+
+const selectClass = 'input mt-2';
+---
+
+<Base
+  title="Calculateur CRS Express Entry 2026 — Score en temps réel | Switch Point"
+  description="Calculez votre score CRS pour Express Entry Canada : âge, études, langues, expérience. Estimation instantanée avec bonus francophone."
+>
+  <ToolShell
+    icon="⚡"
+    name="Calculateur CRS"
+    intro="Estimez votre score Express Entry en temps réel. Ajustez chaque facteur et voyez immédiatement l'impact — notamment le bonus francophone."
+    disclaimer="Estimation simplifiée du Système de classement global (facteurs principaux, sans conjoint détaillé). Le score officiel est calculé par IRCC lors de la création de votre profil."
+  >
+    <div class="grid gap-4 lg:grid-cols-[1fr_320px]">
+      <div class="bento space-y-5 p-6 sm:p-8" id="crs-form">
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-sm font-semibold text-navy-900 dark:text-white">Âge</span>
+            <select data-crs="age" class={selectClass}>
+              <option value="105" selected>20 – 29 ans (max)</option>
+              <option value="99">30 ans</option>
+              <option value="94">31 ans</option>
+              <option value="88">32 ans</option>
+              <option value="83">33 ans</option>
+              <option value="77">34 ans</option>
+              <option value="72">35 ans</option>
+              <option value="55">37 ans</option>
+              <option value="39">39 ans</option>
+              <option value="11">42 ans</option>
+              <option value="0">45 ans et plus</option>
+              <option value="99">18 – 19 ans</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="text-sm font-semibold text-navy-900 dark:text-white">Niveau d'études</span>
+            <select data-crs="edu" class={selectClass}>
+              <option value="30">Secondaire</option>
+              <option value="90">Diplôme post-secondaire 1–2 ans</option>
+              <option value="120" selected>Licence / Bachelor (3 ans+)</option>
+              <option value="128">Deux diplômes (dont un 3 ans+)</option>
+              <option value="135">Master</option>
+              <option value="150">Doctorat</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="text-sm font-semibold text-navy-900 dark:text-white">Français (1re langue) — niveau NCLC</span>
+            <select data-crs="fr" class={selectClass}>
+              <option value="0">Aucun test / sous NCLC 4</option>
+              <option value="24">NCLC 5 (24 pts)</option>
+              <option value="68">NCLC 7 (68 pts)</option>
+              <option value="92" selected>NCLC 8 (92 pts)</option>
+              <option value="116">NCLC 9 (116 pts)</option>
+              <option value="136">NCLC 10+ (136 pts)</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="text-sm font-semibold text-navy-900 dark:text-white">Anglais (2e langue) — niveau CLB</span>
+            <select data-crs="en" class={selectClass}>
+              <option value="0" selected>Aucun test</option>
+              <option value="4">CLB 5–6 (4 pts)</option>
+              <option value="12">CLB 7–8 (12 pts)</option>
+              <option value="24">CLB 9+ (24 pts)</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="text-sm font-semibold text-navy-900 dark:text-white">Expérience de travail étrangère</span>
+            <select data-crs="fwork" class={selectClass}>
+              <option value="0">Aucune</option>
+              <option value="13">1 – 2 ans</option>
+              <option value="25" selected>3 ans et plus</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="text-sm font-semibold text-navy-900 dark:text-white">Expérience de travail au Canada</span>
+            <select data-crs="cwork" class={selectClass}>
+              <option value="0" selected>Aucune</option>
+              <option value="40">1 an</option>
+              <option value="53">2 ans</option>
+              <option value="64">3 ans</option>
+              <option value="80">5 ans et plus</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid gap-3 border-t border-navy-900/8 pt-5 sm:grid-cols-2 dark:border-white/10">
+          {
+            [
+              { k: 'french-bonus', v: 50, label: 'Français NCLC 7+ ET anglais CLB 5+ (50 pts)' },
+              { k: 'french-only', v: 25, label: 'Français NCLC 7+, anglais CLB 4 ou moins (25 pts)' },
+              { k: 'sibling', v: 15, label: 'Frère/sœur citoyen ou RP au Canada (15 pts)' },
+              { k: 'study', v: 30, label: 'Diplôme canadien 3 ans+ (30 pts)' },
+              { k: 'pnp', v: 600, label: 'Nomination provinciale (600 pts)' },
+            ].map((c) => (
+              <label class="flex cursor-pointer items-start gap-3 rounded-2xl border border-navy-900/8 p-3.5 text-sm transition-colors hover:border-brand-500/40 dark:border-white/10">
+                <input type="checkbox" data-crs-check={c.v} data-key={c.k} class="mt-0.5 h-4 w-4 accent-brand-700" />
+                <span class="leading-snug text-navy-900/75 dark:text-white/70">{c.label}</span>
+              </label>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Score card -->
+      <aside class="bento h-fit bg-gradient-to-br from-brand-800 to-navy-950 p-7 !text-white lg:sticky lg:top-28">
+        <p class="text-xs font-bold tracking-[0.18em] uppercase text-white/50">Votre score estimé</p>
+        <p class="font-display mt-3 text-6xl font-bold" id="crs-total">0</p>
+        <p class="mt-1 text-sm text-white/55">sur 1 200 points</p>
+        <div class="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
+          <div id="crs-gauge" class="h-full rounded-full bg-gradient-to-r from-brand-400 to-emerald-400 transition-all duration-500" style="width:0%"></div>
+        </div>
+        <div class="mt-6 space-y-2.5 text-xs text-white/65">
+          <p class="flex justify-between"><span>Tirage général (indicatif)</span><strong>~530</strong></p>
+          <p class="flex justify-between"><span>Tirage francophone (indicatif)</span><strong>~420</strong></p>
+          <p class="flex justify-between"><span>Tirage PNP</span><strong>~700</strong></p>
+        </div>
+        <p id="crs-verdict" class="mt-5 rounded-2xl bg-white/8 p-4 text-sm leading-relaxed text-white/80"></p>
+        <a href="/canada/express-entry" class="btn-primary btn-md mt-5 w-full">Voir le programme Express Entry</a>
+      </aside>
+    </div>
+  </ToolShell>
+</Base>
+
+<script>
+  const form = document.getElementById('crs-form')!;
+  const totalEl = document.getElementById('crs-total')!;
+  const gauge = document.getElementById('crs-gauge')!;
+  const verdict = document.getElementById('crs-verdict')!;
+
+  function compute() {
+    let total = 0;
+    form.querySelectorAll<HTMLSelectElement>('select[data-crs]').forEach((s) => (total += Number(s.value)));
+    let frenchBonus = 0;
+    form.querySelectorAll<HTMLInputElement>('input[data-crs-check]').forEach((c) => {
+      if (!c.checked) return;
+      const v = Number(c.dataset.crsCheck);
+      // Les deux bonus francophones sont exclusifs : garder le plus élevé
+      if (c.dataset.key === 'french-bonus' || c.dataset.key === 'french-only') {
+        frenchBonus = Math.max(frenchBonus, v);
+      } else {
+        total += v;
+      }
+    });
+    total += frenchBonus;
+    total = Math.min(total, 1200);
+
+    totalEl.textContent = String(total);
+    gauge.style.width = `${(total / 1200) * 100}%`;
+
+    verdict.textContent =
+      total >= 700
+        ? 'Excellent : avec une nomination provinciale, l’invitation est quasi assurée au prochain tirage.'
+        : total >= 500
+          ? 'Score compétitif pour les tirages généraux et très solide pour les tirages francophones.'
+          : total >= 400
+            ? 'Sous le seuil des tirages généraux, mais dans la zone des tirages ciblés francophones. Le TEF peut tout changer.'
+            : 'Score à construire : langues, EDE et stratégie provinciale peuvent ajouter 100 à 200 points. Parlez-en à un consultant.';
+  }
+
+  form.addEventListener('change', compute);
+  compute();
+</script>

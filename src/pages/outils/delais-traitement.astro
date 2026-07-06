@@ -1,0 +1,84 @@
+---
+import Base from '@/layouts/Base.astro';
+import ToolShell from '@/components/ToolShell.astro';
+import { destinations } from '@/data/destinations';
+---
+
+<Base
+  title="Délais de traitement des visas 2026 — Tous programmes | Switch Point"
+  description="Les délais actualisés de traitement des demandes : Express Entry, Campus France, visa Schengen, permis européens, visas australiens et néo-zélandais."
+>
+  <ToolShell
+    icon="⏱️"
+    name="Délais de traitement"
+    intro="Combien de temps prend chaque procédure, du dossier à la décision ? Filtrez par destination."
+    disclaimer="Délais indicatifs constatés, hors périodes de pointe et demandes de documents additionnels. Les délais officiels évoluent chaque mois."
+  >
+    <div class="bento p-6 sm:p-8">
+      <div class="flex flex-wrap gap-2" id="dt-filters">
+        <button data-f="all" class="dt-chip is-active rounded-full border border-brand-700 bg-brand-700 px-4 py-2 text-xs font-semibold text-white sm:text-sm">Tout</button>
+        {
+          destinations.map((d) => (
+            <button
+              data-f={d.slug}
+              class="dt-chip rounded-full border border-navy-900/10 px-4 py-2 text-xs font-semibold text-navy-900/65 transition-all hover:border-brand-500 sm:text-sm dark:border-white/12 dark:text-white/60"
+            >
+              {d.flag} {d.name}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="mt-8 overflow-x-auto">
+        <table class="table-premium min-w-[600px]">
+          <thead>
+            <tr>
+              <th>Programme</th>
+              <th>Destination</th>
+              <th>Procédure totale</th>
+              <th>Traitement officiel</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              destinations.flatMap((d) =>
+                d.programs.map((p) => (
+                  <tr data-dt-row={d.slug}>
+                    <td class="font-semibold text-navy-900 dark:text-white">{p.icon} {p.name}</td>
+                    <td class="whitespace-nowrap">{d.flag} {d.name}</td>
+                    <td class="whitespace-nowrap">{p.duration}</td>
+                    <td>{p.processingTime}</td>
+                    <td>
+                      <a href={`/${d.slug}/${p.slug}`} class="text-sm font-bold whitespace-nowrap text-brand-700 hover:underline dark:text-brand-300">
+                        Détails →
+                      </a>
+                    </td>
+                  </tr>
+                ))
+              )
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ToolShell>
+</Base>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.dt-chip');
+  const rowsEls = document.querySelectorAll<HTMLElement>('[data-dt-row]');
+  const activeCls = ['border-brand-700', 'bg-brand-700', 'text-white'];
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => {
+        c.classList.remove(...activeCls, 'is-active');
+        c.classList.add('border-navy-900/10', 'text-navy-900/65');
+      });
+      chip.classList.add(...activeCls, 'is-active');
+      chip.classList.remove('border-navy-900/10', 'text-navy-900/65');
+      const f = chip.dataset.f;
+      rowsEls.forEach((r) => r.classList.toggle('hidden', f !== 'all' && r.dataset.dtRow !== f));
+    })
+  );
+</script>

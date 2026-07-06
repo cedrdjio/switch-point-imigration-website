@@ -1,0 +1,272 @@
+---
+import Base from '@/layouts/Base.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import FaqList from '@/components/FaqList.astro';
+import ToolCard from '@/components/ToolCard.astro';
+import { destinations, type Destination, type Program } from '@/data/destinations';
+import { getTool } from '@/data/tools';
+import { whatsappLink } from '@/data/site';
+
+export function getStaticPaths() {
+  return destinations.flatMap((d) =>
+    d.programs.map((p) => ({
+      params: { destination: d.slug, program: p.slug },
+      props: { d, p },
+    }))
+  );
+}
+
+interface Props {
+  d: Destination;
+  p: Program;
+}
+const { d, p } = Astro.props;
+
+const crumbs = [
+  { name: 'Accueil', url: '/' },
+  { name: 'Destinations', url: '/destinations' },
+  { name: d.name, url: `/${d.slug}` },
+  { name: p.name, url: `/${d.slug}/${p.slug}` },
+];
+
+const relatedTools = p.relatedTools.map(getTool).filter((t) => t !== undefined);
+const otherPrograms = d.programs.filter((x) => x.slug !== p.slug);
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: p.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `${p.name} — ${d.name}`,
+  description: p.overview,
+  provider: { '@type': 'ProfessionalService', name: 'Switch Point Immigration' },
+  areaServed: 'Africa',
+};
+
+const waMessage = `Bonjour Switch Point, je suis intéressé(e) par le programme ${p.name} (${d.name}). Pouvez-vous évaluer mon profil ?`;
+---
+
+<Base
+  title={`${p.name} ${d.name} : éligibilité, coûts, délais ${new Date().getFullYear()} | Switch Point`}
+  description={`${p.short} Critères d'éligibilité, documents requis, frais officiels et étapes de la procédure ${p.name} pour ${d.name}.`}
+  breadcrumbs={crumbs}
+  schema={[faqSchema, serviceSchema]}
+>
+  <!-- Hero -->
+  <section class="relative overflow-hidden pt-10 pb-4" data-parallax-container>
+    <div class={`aurora -top-24 right-10 h-96 w-96 bg-gradient-to-br ${d.gradient}`} data-parallax="0.18"></div>
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+      <Breadcrumbs crumbs={crumbs} />
+      <div class="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
+        <div data-reveal>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="badge">{d.flag} {d.name}</span>
+            {p.popular && <span class="badge">⭐ Programme populaire</span>}
+          </div>
+          <h1 class="font-display mt-4 text-4xl font-bold tracking-tight text-navy-900 sm:text-5xl dark:text-white">
+            {p.icon} {p.name}
+          </h1>
+          <p class="section-sub">{p.overview}</p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="/rendez-vous" class="btn-primary btn-lg">Évaluer mon dossier</a>
+            <a href={whatsappLink(waMessage)} target="_blank" rel="noopener" class="btn-secondary btn-lg">💬 WhatsApp</a>
+          </div>
+        </div>
+
+        <!-- Carte résumé sticky -->
+        <aside class="bento h-fit p-6 lg:sticky lg:top-28" data-reveal data-reveal-delay="0.1">
+          <p class="text-xs font-bold tracking-[0.18em] uppercase text-navy-900/40 dark:text-white/40">En bref</p>
+          <dl class="mt-4 space-y-4">
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-sm text-navy-900/55 dark:text-white/50">Délai indicatif</dt>
+              <dd class="text-sm font-bold text-navy-900 dark:text-white">{p.duration}</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-sm text-navy-900/55 dark:text-white/50">Traitement</dt>
+              <dd class="text-right text-sm font-bold text-navy-900 dark:text-white">{p.processingTime.split('·')[0]}</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-sm text-navy-900/55 dark:text-white/50">Étapes</dt>
+              <dd class="text-sm font-bold text-navy-900 dark:text-white">{p.steps.length}</dd>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <dt class="text-sm text-navy-900/55 dark:text-white/50">Documents clés</dt>
+              <dd class="text-sm font-bold text-navy-900 dark:text-white">{p.documents.length}</dd>
+            </div>
+          </dl>
+          <a href="/rendez-vous" class="btn-primary btn-md mt-6 w-full">Consultation gratuite</a>
+          <p class="mt-3 text-center text-[11px] text-navy-900/40 dark:text-white/35">Évaluation de profil sans engagement</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <!-- Éligibilité + documents (bento 2 col) -->
+    <section class="mt-12 grid gap-4 lg:grid-cols-2" data-reveal-group>
+      <div class="bento p-7" data-reveal-item>
+        <h2 class="font-display flex items-center gap-3 text-xl font-bold text-navy-900 dark:text-white">
+          <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-lg">✅</span>
+          Critères d'éligibilité
+        </h2>
+        <ul class="mt-5 space-y-3">
+          {
+            p.eligibility.map((e) => (
+              <li class="flex items-start gap-3 text-sm leading-relaxed text-navy-900/70 dark:text-white/65">
+                <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/12 text-[10px] text-emerald-600 dark:text-emerald-400">✓</span>
+                {e}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="bento p-7" data-reveal-item>
+        <h2 class="font-display flex items-center gap-3 text-xl font-bold text-navy-900 dark:text-white">
+          <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500/10 text-lg">📋</span>
+          Documents requis
+        </h2>
+        <ul class="mt-5 space-y-3">
+          {
+            p.documents.map((doc) => (
+              <li class="flex items-start gap-3 text-sm leading-relaxed text-navy-900/70 dark:text-white/65">
+                <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-500/12 text-[10px] text-brand-600 dark:text-brand-400">•</span>
+                {doc}
+              </li>
+            ))
+          }
+        </ul>
+        <a href="/outils/generateur-documents" class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">
+          Générer ma checklist personnalisée →
+        </a>
+      </div>
+    </section>
+
+    <!-- Frais + délais -->
+    <section class="mt-4 grid gap-4 lg:grid-cols-[1.2fr_1fr]" data-reveal-group>
+      <div class="bento p-7" data-reveal-item>
+        <h2 class="font-display flex items-center gap-3 text-xl font-bold text-navy-900 dark:text-white">
+          <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 text-lg">💰</span>
+          Frais gouvernementaux
+        </h2>
+        <div class="mt-5 overflow-x-auto">
+          <table class="table-premium">
+            <thead>
+              <tr><th>Poste</th><th class="!text-right">Montant</th></tr>
+            </thead>
+            <tbody>
+              {
+                p.governmentFees.map((f) => (
+                  <tr>
+                    <td>{f.label}</td>
+                    <td class="!text-right font-semibold whitespace-nowrap">{f.amount}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-4 text-xs leading-relaxed text-navy-900/45 dark:text-white/40">
+          Montants officiels indicatifs, susceptibles d'évoluer. Hors frais d'agence — nos honoraires sont communiqués en toute transparence après l'évaluation gratuite.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div class="bento flex-1 p-7" data-reveal-item>
+          <h2 class="font-display flex items-center gap-3 text-lg font-bold text-navy-900 dark:text-white">
+            <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500/10 text-lg">⏱️</span>
+            Délai de traitement
+          </h2>
+          <p class="mt-4 text-sm leading-relaxed text-navy-900/70 dark:text-white/65">{p.processingTime}</p>
+        </div>
+        <div class="bento bg-gradient-to-br from-brand-700 to-brand-900 p-7 !text-white" data-reveal-item>
+          <h2 class="font-display text-lg font-bold">🤝 Accompagnement Switch Point</h2>
+          <p class="mt-3 text-sm leading-relaxed text-white/75">{p.agencyNote}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Étapes -->
+    <section class="mt-16">
+      <SectionHead eyebrow="La procédure" title="Étapes de la demande" />
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+        {
+          p.steps.map((s, i) => (
+            <div class="bento relative p-6" data-reveal-item>
+              <span class="font-display text-4xl font-bold text-brand-500/20">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="font-display mt-2 font-bold text-navy-900 dark:text-white">{s.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{s.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Avantages -->
+    <section class="mt-16">
+      <div class="bento overflow-hidden !rounded-4xl p-8 sm:p-10" data-reveal>
+        <div class={`pointer-events-none absolute inset-0 bg-gradient-to-br opacity-40 ${d.gradient}`}></div>
+        <div class="relative">
+          <h2 class="font-display text-2xl font-bold text-navy-900 dark:text-white">Pourquoi choisir ce programme</h2>
+          <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+            {
+              p.advantages.map((a) => (
+                <li class="flex items-start gap-3 text-sm leading-relaxed font-medium text-navy-900/75 dark:text-white/70">
+                  <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-700 text-[11px] text-white">★</span>
+                  {a}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Outils liés -->
+    {
+      relatedTools.length > 0 && (
+        <section class="mt-16">
+          <SectionHead eyebrow="Outils recommandés" title="Préparez ce programme avec nos outils" />
+          <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+            {relatedTools.map((t) => (
+              <ToolCard tool={t!} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- FAQ -->
+    <section class="mx-auto mt-16 max-w-4xl">
+      <SectionHead eyebrow="FAQ" title={`Questions sur ${p.name}`} align="center" />
+      <FaqList items={p.faq} class="mt-8" />
+    </section>
+
+    <!-- Autres programmes -->
+    {
+      otherPrograms.length > 0 && (
+        <section class="mt-16">
+          <SectionHead eyebrow="Continuer l'exploration" title={`Autres programmes — ${d.name}`} />
+          <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+            {otherPrograms.map((op) => (
+              <a href={`/${d.slug}/${op.slug}`} class="bento bento-hover group p-6" data-reveal-item>
+                <span class="text-2xl">{op.icon}</span>
+                <h3 class="font-display mt-3 font-bold text-navy-900 group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">{op.name}</h3>
+                <p class="mt-1.5 text-sm text-navy-900/55 dark:text-white/50">{op.short}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</Base>

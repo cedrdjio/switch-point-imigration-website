@@ -1,0 +1,23 @@
+---
+interface Props {
+  crumbs: { name: string; url: string }[];
+}
+const { crumbs } = Astro.props;
+---
+
+<nav aria-label="Fil d'Ariane" class="flex flex-wrap items-center gap-1.5 text-xs">
+  {
+    crumbs.map((c, i) => (
+      <>
+        {i > 0 && <span class="text-navy-900/30 dark:text-white/30">/</span>}
+        {i === crumbs.length - 1 ? (
+          <span class="font-semibold text-navy-900/80 dark:text-white/80">{c.name}</span>
+        ) : (
+          <a href={c.url} class="text-navy-900/50 transition-colors hover:text-brand-700 dark:text-white/50 dark:hover:text-brand-300">
+            {c.name}
+          </a>
+        )}
+      </>
+    ))
+  }
+</nav>

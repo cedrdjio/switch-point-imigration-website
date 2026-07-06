@@ -1,0 +1,112 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/space-grotesk';
+import '@/styles/global.css';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import StickyCta from '@/components/StickyCta.astro';
+import { SITE } from '@/data/site';
+
+interface Crumb {
+  name: string;
+  url: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  ogType?: string;
+  breadcrumbs?: Crumb[];
+  /** Objets JSON-LD supplémentaires (FAQPage, Article, Service…) */
+  schema?: Record<string, unknown>[];
+  noIndex?: boolean;
+}
+
+const { title, description, ogType = 'website', breadcrumbs, schema = [], noIndex = false } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: SITE.name,
+  description: SITE.description,
+  url: SITE.url,
+  logo: `${SITE.url}/images/logo.png`,
+  telephone: SITE.phone,
+  email: SITE.email,
+  address: { '@type': 'PostalAddress', addressLocality: 'Douala', addressCountry: 'CM' },
+  sameAs: Object.values(SITE.socials),
+  areaServed: 'Africa',
+  serviceType: "Conseil en immigration",
+};
+
+const breadcrumbSchema = breadcrumbs?.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: c.name,
+        item: new URL(c.url, Astro.site).href,
+      })),
+    }
+  : null;
+
+const allSchema = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema] : []), ...schema];
+---
+
+<!doctype html>
+<html lang="fr" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="apple-touch-icon" href="/images/logo.png" />
+    <meta name="theme-color" content="#004090" />
+    {noIndex && <meta name="robots" content="noindex" />}
+
+    <!-- OpenGraph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${SITE.url}/images/logo.png`} />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {allSchema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+
+    <!-- Thème avant paint (évite le flash) -->
+    <script is:inline>
+      (function () {
+        const t = localStorage.getItem('sp-theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen antialiased">
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <StickyCta />
+    <script>
+      import '@/scripts/main.ts';
+    </script>
+  </body>
+</html>
