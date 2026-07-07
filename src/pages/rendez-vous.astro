@@ -3,6 +3,7 @@ import Base from '@/layouts/Base.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import { SITE } from '@/data/site';
 import { destinations } from '@/data/destinations';
+import Icon from '@/components/Icon.astro';
 
 const crumbs = [
   { name: 'Accueil', url: '/' },
@@ -33,12 +34,12 @@ const crumbs = [
           <div class="mt-8 space-y-4">
             {
               [
-                { icon: '🎯', title: 'Analyse de votre profil', text: 'Âge, diplômes, langues, expérience, budget : passage au crible des critères officiels.' },
-                { icon: '🗺️', title: 'Recommandation de programme', text: 'Le ou les programmes où vos chances sont réelles — et ceux à éviter.' },
-                { icon: '💰', title: 'Budget et calendrier', text: 'Coûts gouvernementaux, honoraires, échéances : tout est posé noir sur blanc.' },
+                { icon: 'Target', title: 'Analyse de votre profil', text: 'Âge, diplômes, langues, expérience, budget : passage au crible des critères officiels.' },
+                { icon: 'Map', title: 'Recommandation de programme', text: 'Le ou les programmes où vos chances sont réelles — et ceux à éviter.' },
+                { icon: 'PiggyBank', title: 'Budget et calendrier', text: 'Coûts gouvernementaux, honoraires, échéances : tout est posé noir sur blanc.' },
               ].map((s) => (
                 <div class="bento flex items-start gap-4 p-5">
-                  <span class="text-2xl">{s.icon}</span>
+                  <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-900 text-accent-400"><Icon name={s.icon} class="h-5 w-5" /></span>
                   <div>
                     <h3 class="font-display font-bold text-navy-900 dark:text-white">{s.title}</h3>
                     <p class="mt-1 text-sm text-navy-900/55 dark:text-white/50">{s.text}</p>
@@ -64,7 +65,7 @@ const crumbs = [
               <span class="text-sm font-semibold text-navy-900 dark:text-white">Destination visée</span>
               <select name="dest" class="input mt-1.5">
                 <option value="Je ne sais pas encore">Je ne sais pas encore</option>
-                {destinations.map((d) => <option value={d.name}>{d.flag} {d.name}</option>)}
+                {destinations.map((d) => <option value={d.name}>{d.name}</option>)}
               </select>
             </label>
             <label class="block">
@@ -80,9 +81,9 @@ const crumbs = [
             <label class="block">
               <span class="text-sm font-semibold text-navy-900 dark:text-white">Créneau souhaité</span>
               <select name="slot" class="input mt-1.5">
-                <option>Matin (8h – 12h)</option>
-                <option>Après-midi (12h – 18h)</option>
-                <option>Samedi matin</option>
+                <option>Matin (08h00 – 12h00)</option>
+                <option>Après-midi (12h00 – 17h30)</option>
+                <option>Samedi (08h00 – 17h30)</option>
               </select>
             </label>
             <label class="block">
@@ -90,7 +91,7 @@ const crumbs = [
               <textarea name="msg" rows="3" placeholder="Décrivez brièvement votre situation…" class="input mt-1.5 resize-none"></textarea>
             </label>
             <button type="submit" class="btn-primary btn-lg w-full">
-              💬 Envoyer sur WhatsApp
+              <Icon name="MessageCircle" class="h-4.5 w-4.5" /> Envoyer sur WhatsApp
             </button>
             <p class="text-center text-[11px] text-navy-900/40 dark:text-white/35">
               Ou par email :
@@ -108,7 +109,7 @@ const crumbs = [
     e.preventDefault();
     const f = new FormData(e.target);
     const msg = [
-      'Bonjour Switch Point, je souhaite réserver une consultation gratuite.',
+      'Bonjour SwitchPoint, je souhaite réserver une consultation gratuite.',
       `👤 Nom : ${f.get('name')}`,
       `🌍 Destination : ${f.get('dest')}`,
       `🎯 Projet : ${f.get('goal')}`,

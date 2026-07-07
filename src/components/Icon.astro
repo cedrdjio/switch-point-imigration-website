@@ -1,0 +1,26 @@
+---
+/**
+ * Icône Lucide inline (SVG injecté au build — aucun JS client).
+ * Usage : <Icon name="Plane" class="h-5 w-5 text-accent-500" />
+ */
+import * as lucide from 'lucide-static';
+
+interface Props {
+  name: string;
+  class?: string;
+  strokeWidth?: number;
+}
+
+const { name, class: className = 'h-5 w-5', strokeWidth } = Astro.props;
+
+const raw = (lucide as unknown as Record<string, string>)[name];
+if (!raw) throw new Error(`Icône Lucide inconnue : "${name}"`);
+
+let svg = raw
+  .replace(/width="24"/, '')
+  .replace(/height="24"/, '')
+  .replace(/class="lucide[^"]*"/, `class="${className}"`);
+if (strokeWidth) svg = svg.replace(/stroke-width="2"/, `stroke-width="${strokeWidth}"`);
+---
+
+<Fragment set:html={svg} />

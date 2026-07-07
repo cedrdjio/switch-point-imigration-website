@@ -9,7 +9,7 @@ import { allPrograms } from '@/data/destinations';
   description="Générez la liste exacte des documents requis pour votre programme d'immigration : Canada, France, Schengen, Australie et plus. Cochez, imprimez, partez serein."
 >
   <ToolShell
-    icon="📋"
+    icon="ClipboardList"
     name="Checklist de documents"
     intro="Sélectionnez votre programme : la liste officielle des pièces s'affiche. Cochez au fur et à mesure — votre progression est enregistrée sur cet appareil."
     disclaimer="Liste de base commune aux dossiers standards. Selon votre situation (mineur, regroupement, refus antérieur), des pièces additionnelles peuvent être exigées."
@@ -21,7 +21,7 @@ import { allPrograms } from '@/data/destinations';
           {
             allPrograms.map(({ destination, program }, i) => (
               <option value={`${destination.slug}-${program.slug}`} selected={i === 0}>
-                {destination.flag} {destination.name} — {program.name}
+                {destination.name} — {program.name}
               </option>
             ))
           }
@@ -48,7 +48,7 @@ import { allPrograms } from '@/data/destinations';
                 ))}
               </div>
               <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-                <button data-gd-print class="btn-secondary btn-md flex-1">🖨 Imprimer ma checklist</button>
+                <button data-gd-print class="btn-secondary btn-md flex-1">Imprimer ma checklist</button>
                 <a href={`/${destination.slug}/${program.slug}`} class="btn-primary btn-md flex-1">
                   Voir le programme complet
                 </a>

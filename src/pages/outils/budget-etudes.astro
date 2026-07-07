@@ -8,7 +8,7 @@ import ToolShell from '@/components/ToolShell.astro';
   description="Chiffrez votre projet d'études au Canada, en France, en Australie, en Russie… : scolarité, logement, visa, billet, assurance. Total en FCFA."
 >
   <ToolShell
-    icon="🎓"
+    icon="Wallet"
     name="Calculateur de budget études"
     intro="Choisissez une destination et un train de vie : obtenez le budget réel de votre première année, poste par poste, converti en FCFA."
     disclaimer="Montants moyens indicatifs (frais 2025-2026, taux de change arrondis). Les coûts varient selon l'établissement, la ville et le mode de vie."
@@ -43,7 +43,7 @@ import ToolShell from '@/components/ToolShell.astro';
 <script>
   interface CountryData {
     name: string;
-    flag: string;
+    cc: string;
     currency: string;
     rate: number; // 1 unité → FCFA (approx.)
     tuition: Record<string, number>;
@@ -53,45 +53,49 @@ import ToolShell from '@/components/ToolShell.astro';
     flight: number; // FCFA directement ? Non, en devise locale approx
   }
 
+  
+  const flagImg = (cc) =>
+    `<img src="https://flagcdn.com/w20/${cc}.png" width="16" height="12" class="inline-block h-3 w-4 rounded-[2px] object-cover align-baseline" alt="" onerror="this.style.display='none'">`;
+
   const data: Record<string, CountryData> = {
     canada: {
-      name: 'Canada', flag: '🇨🇦', currency: 'CAD', rate: 440,
+      name: 'Canada', cc: 'ca', currency: 'CAD', rate: 440,
       tuition: { licence: 22000, master: 20000 },
       living: { eco: 15000, normal: 20635, confort: 27000 },
       visa: 235, insurance: 800, flight: 2600,
     },
     france: {
-      name: 'France', flag: '🇫🇷', currency: 'EUR', rate: 656,
+      name: 'France', cc: 'fr', currency: 'EUR', rate: 656,
       tuition: { licence: 3879, master: 3500 },
       living: { eco: 7380, normal: 9600, confort: 13200 },
       visa: 253, insurance: 300, flight: 900,
     },
     australie: {
-      name: 'Australie', flag: '🇦🇺', currency: 'AUD', rate: 400,
+      name: 'Australie', cc: 'au', currency: 'AUD', rate: 400,
       tuition: { licence: 32000, master: 36000 },
       living: { eco: 24000, normal: 29710, confort: 38000 },
       visa: 1600, insurance: 650, flight: 3200,
     },
     'nouvelle-zelande': {
-      name: 'Nouvelle-Zélande', flag: '🇳🇿', currency: 'NZD', rate: 370,
+      name: 'Nouvelle-Zélande', cc: 'nz', currency: 'NZD', rate: 370,
       tuition: { licence: 28000, master: 32000 },
       living: { eco: 17000, normal: 20000, confort: 26000 },
       visa: 750, insurance: 700, flight: 3600,
     },
     lituanie: {
-      name: 'Lituanie', flag: '🇱🇹', currency: 'EUR', rate: 656,
+      name: 'Lituanie', cc: 'lt', currency: 'EUR', rate: 656,
       tuition: { licence: 3000, master: 4200 },
       living: { eco: 4800, normal: 6600, confort: 9000 },
       visa: 300, insurance: 250, flight: 1000,
     },
     russie: {
-      name: 'Russie', flag: '🇷🇺', currency: 'USD', rate: 600,
+      name: 'Russie', cc: 'ru', currency: 'USD', rate: 600,
       tuition: { licence: 3500, master: 4200 },
       living: { eco: 2400, normal: 3600, confort: 6000 },
       visa: 120, insurance: 200, flight: 1100,
     },
     bielorussie: {
-      name: 'Biélorussie', flag: '🇧🇾', currency: 'USD', rate: 600,
+      name: 'Biélorussie', cc: 'by', currency: 'USD', rate: 600,
       tuition: { licence: 3000, master: 3600 },
       living: { eco: 1800, normal: 2800, confort: 4500 },
       visa: 110, insurance: 180, flight: 1200,
@@ -99,8 +103,8 @@ import ToolShell from '@/components/ToolShell.astro';
   };
 
   const levels = [
-    { k: 'licence', label: '🎓 Licence / Bachelor' },
-    { k: 'master', label: '📖 Master' },
+    { k: 'licence', label: 'Licence / Bachelor' },
+    { k: 'master', label: 'Master' },
   ];
   const lifestyles = [
     { k: 'eco', label: 'Économe' },
@@ -124,7 +128,7 @@ import ToolShell from '@/components/ToolShell.astro';
   function render() {
     const cWrap = document.getElementById('be-countries')!;
     cWrap.innerHTML = Object.entries(data)
-      .map(([k, c]) => `<button data-c="${k}" class="${chip(k === country)}">${c.flag} ${c.name}</button>`)
+      .map(([k, c]) => `<button data-c="${k}" class="${chip(k === country)}">${flagImg(c.cc)} ${c.name}</button>`)
       .join('');
     cWrap.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
       b.addEventListener('click', () => { country = b.dataset.c!; render(); })

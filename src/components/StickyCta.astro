@@ -1,5 +1,6 @@
 ---
 import { whatsappLink } from '@/data/site';
+import Icon from '@/components/Icon.astro';
 ---
 
 <!-- CTA flottant : WhatsApp + RDV -->
@@ -8,16 +9,13 @@ import { whatsappLink } from '@/data/site';
     href={whatsappLink()}
     target="_blank"
     rel="noopener"
-    aria-label="Discuter sur WhatsApp"
-    class="flex h-13 w-13 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lift transition-transform hover:scale-110 h-[52px] w-[52px]"
+    aria-label="Réserver une consultation via WhatsApp"
+    class="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-emerald-500 text-white shadow-lift transition-transform hover:scale-110"
   >
-    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.4-.1.7.2.3.8 1.4 1.8 2.2 1.2 1.1 2.3 1.4 2.6 1.6.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.3Z"/></svg>
+    <Icon name="MessageCircle" class="h-6 w-6" />
   </a>
-  <a
-    href="/rendez-vous"
-    class="btn-primary btn-md shadow-lift"
-  >
-    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="4"/><path d="M8 2v4m8-4v4M3 10h18"/></svg>
+  <a href="/rendez-vous" class="btn-primary btn-md shadow-lift">
+    <Icon name="Calendar" class="h-4 w-4" />
     Prendre RDV
   </a>
 </div>

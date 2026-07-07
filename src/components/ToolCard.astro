@@ -1,5 +1,6 @@
 ---
 import type { Tool } from '@/data/tools';
+import Icon from '@/components/Icon.astro';
 
 interface Props {
   tool: Tool;
@@ -9,15 +10,15 @@ const { tool: t } = Astro.props;
 
 <a href={`/outils/${t.slug}`} class="bento bento-hover group flex flex-col p-6" data-reveal-item>
   <div class="flex items-start justify-between">
-    <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500/15 to-brand-700/15 text-2xl transition-transform duration-300 group-hover:scale-110">
-      {t.icon}
+    <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-900 text-accent-400 transition-transform duration-300 group-hover:scale-110">
+      <Icon name={t.icon} class="h-5.5 w-5.5" />
     </span>
     {t.badge && <span class="badge">{t.badge}</span>}
   </div>
   <h3 class="font-display mt-5 text-lg font-bold tracking-tight text-navy-900 dark:text-white">{t.name}</h3>
   <p class="mt-1.5 flex-1 text-sm leading-snug text-navy-900/55 dark:text-white/50">{t.short}</p>
-  <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors group-hover:text-brand-500 dark:text-brand-300">
+  <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-800 transition-colors group-hover:text-accent-600 dark:text-accent-300">
     Lancer l’outil
-    <svg class="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10m-4-4 4 4-4 4"/></svg>
+    <Icon name="ArrowRight" class="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
   </span>
 </a>

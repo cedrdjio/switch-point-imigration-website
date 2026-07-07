@@ -12,6 +12,7 @@ export interface Program {
   slug: string;
   name: string;
   short: string;
+  /** Nom d'icône Lucide */
   icon: string;
   duration: string;
   overview: string;
@@ -31,6 +32,10 @@ export interface Destination {
   slug: string;
   name: string;
   flag: string;
+  /** Code pays ISO pour flagcdn.com (ex. 'ca', 'eu') */
+  cc: string;
+  /** Photo paysage/ville (URL distante, repli local automatique) */
+  image: string;
   region: 'Amérique du Nord' | 'Europe' | 'Océanie';
   tagline: string;
   overview: string;
@@ -50,6 +55,8 @@ const canada: Destination = {
   slug: 'canada',
   name: 'Canada',
   flag: '🇨🇦',
+  cc: 'ca',
+  image: 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=1600&q=80',
   region: 'Amérique du Nord',
   tagline: 'La destination n°1 des Africains francophones',
   overview:
@@ -62,10 +69,10 @@ const canada: Destination = {
     { label: 'Délai moyen', value: '6–18 mois' },
   ],
   benefits: [
-    { icon: '🎓', title: 'Études de classe mondiale', text: 'Universités reconnues et permis de travail post-diplôme jusqu’à 3 ans.' },
-    { icon: '💼', title: 'Marché du travail dynamique', text: 'Pénurie de main-d’œuvre dans la santé, la tech et les métiers spécialisés.' },
-    { icon: '🏥', title: 'Santé et éducation publiques', text: 'Couverture santé universelle et école gratuite pour les enfants de résidents.' },
-    { icon: '🛂', title: 'Voie directe vers la citoyenneté', text: 'Citoyenneté possible après 3 ans de résidence permanente.' },
+    { icon: 'GraduationCap', title: 'Études de classe mondiale', text: 'Universités reconnues et permis de travail post-diplôme jusqu’à 3 ans.' },
+    { icon: 'Briefcase', title: 'Marché du travail dynamique', text: 'Pénurie de main-d’œuvre dans la santé, la tech et les métiers spécialisés.' },
+    { icon: 'HeartPulse', title: 'Santé et éducation publiques', text: 'Couverture santé universelle et école gratuite pour les enfants de résidents.' },
+    { icon: 'Stamp', title: 'Voie directe vers la citoyenneté', text: 'Citoyenneté possible après 3 ans de résidence permanente.' },
   ],
   faq: [
     { q: 'Quel est le meilleur programme pour immigrer au Canada depuis l’Afrique ?', a: "Tout dépend de votre profil. Express Entry favorise les profils qualifiés anglophones/bilingues, Arrima est idéal pour les francophones visant le Québec, et le permis d'études reste la voie la plus sûre pour les moins de 30 ans. Notre simulateur d'éligibilité vous oriente en 2 minutes." },
@@ -79,7 +86,7 @@ const canada: Destination = {
       slug: 'express-entry',
       name: 'Express Entry',
       short: 'Résidence permanente pour travailleurs qualifiés via le système de points CRS.',
-      icon: '⚡',
+      icon: 'Zap',
       duration: '6–8 mois',
       popular: true,
       overview:
@@ -136,7 +143,7 @@ const canada: Destination = {
       slug: 'arrima',
       name: 'Arrima (Québec)',
       short: 'Programme de sélection des travailleurs qualifiés du Québec, idéal pour les francophones.',
-      icon: '⚜️',
+      icon: 'Landmark',
       duration: '12–24 mois',
       popular: true,
       overview:
@@ -190,7 +197,7 @@ const canada: Destination = {
       slug: 'etudes',
       name: "Permis d'études",
       short: "Étudier dans une université ou un collège canadien avec permis de travail intégré.",
-      icon: '🎓',
+      icon: 'GraduationCap',
       duration: '3–6 mois',
       popular: true,
       overview:
@@ -245,7 +252,7 @@ const canada: Destination = {
       slug: 'visiteur',
       name: 'Visa visiteur',
       short: 'Visa de résident temporaire pour tourisme, famille ou affaires, valide jusqu’à 10 ans.',
-      icon: '🧳',
+      icon: 'Luggage',
       duration: '2–8 semaines',
       overview:
         "Le visa de résident temporaire (VRT) permet de visiter le Canada pour le tourisme, rendre visite à la famille ou faire des affaires. Il est souvent délivré pour une durée allant jusqu'à 10 ans avec entrées multiples, chaque séjour étant limité à 6 mois.",
@@ -301,6 +308,8 @@ const france: Destination = {
   slug: 'france',
   name: 'France',
   flag: '🇫🇷',
+  cc: 'fr',
+  image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=80',
   region: 'Europe',
   tagline: 'Étudier et s’installer au cœur de l’Europe francophone',
   overview:
@@ -313,10 +322,10 @@ const france: Destination = {
     { label: 'Délai moyen', value: '2–4 mois' },
   ],
   benefits: [
-    { icon: '🎓', title: 'Université quasi gratuite', text: 'Frais d’inscription parmi les plus bas du monde pour une éducation de rang mondial.' },
-    { icon: '🇪🇺', title: 'Porte d’entrée Schengen', text: 'Circulez librement dans 27 pays européens avec votre titre de séjour.' },
-    { icon: '💬', title: 'Zéro barrière de langue', text: 'Intégration immédiate pour les francophones, réseaux africains établis.' },
-    { icon: '💼', title: 'Travail étudiant autorisé', text: '964 heures par an (60 % d’un temps plein) pendant les études.' },
+    { icon: 'GraduationCap', title: 'Université quasi gratuite', text: 'Frais d’inscription parmi les plus bas du monde pour une éducation de rang mondial.' },
+    { icon: 'Globe', title: 'Porte d’entrée Schengen', text: 'Circulez librement dans 27 pays européens avec votre titre de séjour.' },
+    { icon: 'MessagesSquare', title: 'Zéro barrière de langue', text: 'Intégration immédiate pour les francophones, réseaux africains établis.' },
+    { icon: 'Briefcase', title: 'Travail étudiant autorisé', text: '964 heures par an (60 % d’un temps plein) pendant les études.' },
   ],
   faq: [
     { q: 'Comment fonctionne Campus France ?', a: "La procédure « Études en France » est obligatoire dans la plupart des pays africains : création du dossier, entretien pédagogique, puis demande de visa. Nous préparons chaque étape, notamment l'entretien décisif." },
@@ -329,7 +338,7 @@ const france: Destination = {
       slug: 'etudes',
       name: 'Visa étudiant',
       short: 'Procédure Campus France et visa long séjour pour étudier en France.',
-      icon: '🎓',
+      icon: 'GraduationCap',
       duration: '2–4 mois',
       popular: true,
       overview:
@@ -384,7 +393,7 @@ const france: Destination = {
       slug: 'visiteur',
       name: 'Visa visiteur',
       short: 'Court séjour Schengen ou visa long séjour visiteur pour la France.',
-      icon: '🧳',
+      icon: 'Luggage',
       duration: '2–6 semaines',
       overview:
         "Le visa Schengen court séjour (type C) permet de séjourner jusqu'à 90 jours en France et dans l'espace Schengen. Pour les séjours de plus de 3 mois sans activité professionnelle, le visa long séjour visiteur (type D) est la solution.",
@@ -441,6 +450,8 @@ const schengen: Destination = {
   slug: 'schengen',
   name: 'Espace Schengen',
   flag: '🇪🇺',
+  cc: 'eu',
+  image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80',
   region: 'Europe',
   tagline: '27 pays, un seul visa',
   overview:
@@ -453,9 +464,9 @@ const schengen: Destination = {
     { label: 'Délai moyen', value: '15 jours' },
   ],
   benefits: [
-    { icon: '🗺️', title: 'Liberté de circulation', text: 'Un visa unique pour voyager de Lisbonne à Helsinki sans contrôle aux frontières.' },
-    { icon: '💼', title: 'Affaires et salons', text: 'Idéal pour les entrepreneurs : salons professionnels, rencontres partenaires, prospection.' },
-    { icon: '🔁', title: 'Visa de circulation', text: 'Les voyageurs réguliers obtiennent des visas multi-entrées de 1 à 5 ans.' },
+    { icon: 'Map', title: 'Liberté de circulation', text: 'Un visa unique pour voyager de Lisbonne à Helsinki sans contrôle aux frontières.' },
+    { icon: 'Briefcase', title: 'Affaires et salons', text: 'Idéal pour les entrepreneurs : salons professionnels, rencontres partenaires, prospection.' },
+    { icon: 'Repeat', title: 'Visa de circulation', text: 'Les voyageurs réguliers obtiennent des visas multi-entrées de 1 à 5 ans.' },
   ],
   faq: [
     { q: 'Auprès de quel pays déposer ma demande ?', a: 'Le pays de destination principale (durée la plus longue), ou le pays de première entrée si les durées sont égales. Se tromper de consulat est un motif de refus fréquent.' },
@@ -466,7 +477,7 @@ const schengen: Destination = {
       slug: 'visiteur',
       name: 'Visa Schengen',
       short: 'Visa court séjour type C pour 27 pays européens.',
-      icon: '🇪🇺',
+      icon: 'Globe',
       duration: '2–6 semaines',
       popular: true,
       overview:
@@ -519,6 +530,8 @@ const lithuania: Destination = {
   slug: 'lituanie',
   name: 'Lituanie',
   flag: '🇱🇹',
+  cc: 'lt',
+  image: 'https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=1600&q=80',
   region: 'Europe',
   tagline: 'Le hub tech balte qui recrute',
   overview:
@@ -531,9 +544,9 @@ const lithuania: Destination = {
     { label: 'Délai moyen', value: '2–4 mois' },
   ],
   benefits: [
-    { icon: '🏭', title: 'Forte demande de travailleurs', text: 'Transport, logistique, soudure, BTP : des quotas élevés et des employeurs qui sponsorisent.' },
-    { icon: '🇪🇺', title: 'Résidence européenne', text: 'Après 5 ans, accès au statut de résident de longue durée UE.' },
-    { icon: '💶', title: 'Coût de la vie maîtrisé', text: 'Salaires en euros avec un coût de la vie bien inférieur à l’Europe de l’Ouest.' },
+    { icon: 'Factory', title: 'Forte demande de travailleurs', text: 'Transport, logistique, soudure, BTP : des quotas élevés et des employeurs qui sponsorisent.' },
+    { icon: 'Globe', title: 'Résidence européenne', text: 'Après 5 ans, accès au statut de résident de longue durée UE.' },
+    { icon: 'Banknote', title: 'Coût de la vie maîtrisé', text: 'Salaires en euros avec un coût de la vie bien inférieur à l’Europe de l’Ouest.' },
   ],
   faq: [
     { q: 'Faut-il parler lituanien ?', a: 'Non pour la plupart des emplois (transport, industrie) où l’anglais ou le russe suffisent. Le lituanien devient utile pour la résidence de longue durée.' },
@@ -544,7 +557,7 @@ const lithuania: Destination = {
       slug: 'travail',
       name: 'Permis de travail',
       short: 'Emploi salarié en Lituanie avec permis de séjour temporaire.',
-      icon: '💼',
+      icon: 'Briefcase',
       duration: '2–4 mois',
       popular: true,
       overview:
@@ -595,7 +608,7 @@ const lithuania: Destination = {
       slug: 'etudes',
       name: 'Visa étudiant',
       short: 'Études supérieures en anglais à Vilnius ou Kaunas.',
-      icon: '🎓',
+      icon: 'GraduationCap',
       duration: '2–3 mois',
       overview:
         "Les universités lituaniennes proposent de nombreux programmes en anglais à des frais très compétitifs (2 000–5 000 €/an). Le permis de séjour étudiant autorise le travail à temps partiel et ouvre l'espace Schengen.",
@@ -641,6 +654,8 @@ const bulgaria: Destination = {
   slug: 'bulgarie',
   name: 'Bulgarie',
   flag: '🇧🇬',
+  cc: 'bg',
+  image: 'https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=1600&q=80',
   region: 'Europe',
   tagline: 'La porte d’entrée accessible vers l’Union européenne',
   overview:
@@ -653,9 +668,9 @@ const bulgaria: Destination = {
     { label: 'Délai moyen', value: '2–4 mois' },
   ],
   benefits: [
-    { icon: '🏗️', title: 'Secteurs qui recrutent', text: 'Construction, industrie, hôtellerie-restauration et agriculture cherchent des travailleurs.' },
-    { icon: '💶', title: 'Coût de la vie minimal', text: 'Le pouvoir d’achat le plus favorable de l’UE pour démarrer une vie européenne.' },
-    { icon: '🇪🇺', title: 'Schengen intégré', text: 'La carte de séjour bulgare ouvre désormais la circulation Schengen.' },
+    { icon: 'Construction', title: 'Secteurs qui recrutent', text: 'Construction, industrie, hôtellerie-restauration et agriculture cherchent des travailleurs.' },
+    { icon: 'Banknote', title: 'Coût de la vie minimal', text: 'Le pouvoir d’achat le plus favorable de l’UE pour démarrer une vie européenne.' },
+    { icon: 'Globe', title: 'Schengen intégré', text: 'La carte de séjour bulgare ouvre désormais la circulation Schengen.' },
   ],
   faq: [
     { q: 'La Bulgarie est-elle vraiment dans Schengen ?', a: 'Oui, la Bulgarie a pleinement intégré l’espace Schengen (frontières terrestres incluses depuis janvier 2025). Votre titre de séjour bulgare permet de circuler dans tout l’espace.' },
@@ -666,7 +681,7 @@ const bulgaria: Destination = {
       slug: 'travail',
       name: 'Permis de travail',
       short: 'Permis unique travail + séjour pour un emploi en Bulgarie.',
-      icon: '💼',
+      icon: 'Briefcase',
       duration: '2–4 mois',
       overview:
         "Le « permis unique » combine autorisation de travail et titre de séjour. L'employeur bulgare initie la demande auprès de l'Agence pour l'emploi ; une fois approuvée, vous obtenez un visa D puis votre carte de séjour.",
@@ -714,6 +729,8 @@ const russia: Destination = {
   slug: 'russie',
   name: 'Russie',
   flag: '🇷🇺',
+  cc: 'ru',
+  image: 'https://images.unsplash.com/photo-1513326738677-b964603b136d?auto=format&fit=crop&w=1600&q=80',
   region: 'Europe',
   tagline: 'Études d’excellence à coût réduit',
   overview:
@@ -726,9 +743,9 @@ const russia: Destination = {
     { label: 'Délai moyen', value: '1–2 mois' },
   ],
   benefits: [
-    { icon: '⚕️', title: 'Médecine accessible', text: 'Facultés de médecine reconnues OMS à une fraction du coût occidental.' },
-    { icon: '🎓', title: 'Bourses gouvernementales', text: 'Quotas de bourses d’État réservés aux pays africains chaque année.' },
-    { icon: '🏛️', title: 'Année préparatoire', text: 'Faculté préparatoire de russe intégrée pour démarrer sans le russe.' },
+    { icon: 'Stethoscope', title: 'Médecine accessible', text: 'Facultés de médecine reconnues OMS à une fraction du coût occidental.' },
+    { icon: 'GraduationCap', title: 'Bourses gouvernementales', text: 'Quotas de bourses d’État réservés aux pays africains chaque année.' },
+    { icon: 'Landmark', title: 'Année préparatoire', text: 'Faculté préparatoire de russe intégrée pour démarrer sans le russe.' },
   ],
   faq: [
     { q: 'Faut-il parler russe ?', a: 'Non au départ : la faculté préparatoire (1 an) enseigne le russe intensif. De nombreux programmes existent aussi entièrement en anglais.' },
@@ -739,7 +756,7 @@ const russia: Destination = {
       slug: 'etudes',
       name: 'Visa étudiant',
       short: 'Études universitaires en Russie, médecine et ingénierie en tête.',
-      icon: '🎓',
+      icon: 'GraduationCap',
       duration: '1–2 mois',
       overview:
         "Le visa étudiant russe s'obtient sur invitation officielle de l'université. La procédure est rapide et le taux d'approbation élevé une fois l'admission acquise. Rentrées en septembre et février.",
@@ -783,7 +800,7 @@ const russia: Destination = {
       slug: 'visiteur',
       name: 'Visa visiteur',
       short: 'Tourisme et affaires en Russie sur invitation.',
-      icon: '🧳',
+      icon: 'Luggage',
       duration: '2–4 semaines',
       overview:
         "Le visa touristique ou d'affaires russe s'obtient sur voucher touristique ou invitation d'entreprise. Procédure simple et rapide avec le bon support d'invitation.",
@@ -823,6 +840,8 @@ const belarus: Destination = {
   slug: 'bielorussie',
   name: 'Biélorussie',
   flag: '🇧🇾',
+  cc: 'by',
+  image: 'https://images.unsplash.com/photo-1543832923-44667a44c804?auto=format&fit=crop&w=1600&q=80',
   region: 'Europe',
   tagline: 'Études techniques et médicales à petit budget',
   overview:
@@ -835,9 +854,9 @@ const belarus: Destination = {
     { label: 'Délai moyen', value: '1–2 mois' },
   ],
   benefits: [
-    { icon: '💰', title: 'Budget minimal', text: 'Le coût total études + vie le plus bas de notre catalogue.' },
-    { icon: '⚕️', title: 'Facultés de médecine', text: 'Universités médicales d’État listées OMS avec filières anglophones.' },
-    { icon: '🎓', title: 'Admission simple', text: 'Pas de concours d’entrée pour la plupart des filières internationales.' },
+    { icon: 'PiggyBank', title: 'Budget minimal', text: 'Le coût total études + vie le plus bas de notre catalogue.' },
+    { icon: 'Stethoscope', title: 'Facultés de médecine', text: 'Universités médicales d’État listées OMS avec filières anglophones.' },
+    { icon: 'GraduationCap', title: 'Admission simple', text: 'Pas de concours d’entrée pour la plupart des filières internationales.' },
   ],
   faq: [
     { q: 'Quel budget annuel total prévoir ?', a: 'Entre 4 000 et 6 000 $ par an tout compris (scolarité, logement universitaire, nourriture) selon la filière et la ville.' },
@@ -847,7 +866,7 @@ const belarus: Destination = {
       slug: 'etudes',
       name: 'Visa étudiant',
       short: 'Études universitaires en Biélorussie sur invitation officielle.',
-      icon: '🎓',
+      icon: 'GraduationCap',
       duration: '1–2 mois',
       overview:
         "Le visa étudiant biélorusse s'obtient sur invitation officielle du ministère via l'université. L'année préparatoire de russe est disponible, ainsi que des filières anglophones en médecine.",
@@ -895,6 +914,8 @@ const australia: Destination = {
   slug: 'australie',
   name: 'Australie',
   flag: '🇦🇺',
+  cc: 'au',
+  image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1600&q=80',
   region: 'Océanie',
   tagline: 'Salaires records et qualité de vie exceptionnelle',
   overview:
@@ -907,9 +928,9 @@ const australia: Destination = {
     { label: 'Délai moyen', value: '1–9 mois' },
   ],
   benefits: [
-    { icon: '💵', title: 'Salaires records', text: 'Le salaire minimum le plus élevé du monde et des métiers qualifiés très bien payés.' },
-    { icon: '🎓', title: 'Universités d’élite', text: 'Neuf universités dans le top 100 mondial et permis post-études généreux.' },
-    { icon: '☀️', title: 'Qualité de vie', text: 'Climat, sécurité et multiculturalisme : Melbourne et Sydney en tête des classements.' },
+    { icon: 'Banknote', title: 'Salaires records', text: 'Le salaire minimum le plus élevé du monde et des métiers qualifiés très bien payés.' },
+    { icon: 'GraduationCap', title: 'Universités d’élite', text: 'Neuf universités dans le top 100 mondial et permis post-études généreux.' },
+    { icon: 'Sun', title: 'Qualité de vie', text: 'Climat, sécurité et multiculturalisme : Melbourne et Sydney en tête des classements.' },
   ],
   faq: [
     { q: 'L’immigration australienne est-elle accessible depuis l’Afrique ?', a: 'Oui, mais elle est sélective : le système à points favorise les diplômés anglophones avec expérience. La voie études reste la plus réaliste pour la plupart des profils.' },
@@ -920,7 +941,7 @@ const australia: Destination = {
       slug: 'etudes',
       name: 'Visa étudiant (500)',
       short: 'Études en Australie avec travail autorisé 48 h/quinzaine.',
-      icon: '🎓',
+      icon: 'GraduationCap',
       duration: '1–4 mois',
       popular: true,
       overview:
@@ -968,7 +989,7 @@ const australia: Destination = {
       slug: 'travail',
       name: 'Visas qualifiés (189/190/482)',
       short: 'Immigration à points et visas sponsorisés par employeur.',
-      icon: '💼',
+      icon: 'Briefcase',
       duration: '6–12 mois',
       overview:
         "L'Australie sélectionne les travailleurs qualifiés via un système à points (Skilled Independent 189, Skilled Nominated 190) et des visas sponsorisés (Skills in Demand 482). Les métiers en pénurie — santé, ingénierie, BTP, tech — offrent les meilleures chances.",
@@ -1014,7 +1035,7 @@ const australia: Destination = {
       slug: 'visiteur',
       name: 'Visa visiteur (600)',
       short: 'Tourisme, famille et affaires jusqu’à 12 mois.',
-      icon: '🧳',
+      icon: 'Luggage',
       duration: '2–6 semaines',
       overview:
         "Le Subclass 600 couvre tourisme, visites familiales et voyages d'affaires, pour des séjours de 3, 6 ou 12 mois. La demande est entièrement en ligne.",
@@ -1054,6 +1075,8 @@ const newZealand: Destination = {
   slug: 'nouvelle-zelande',
   name: 'Nouvelle-Zélande',
   flag: '🇳🇿',
+  cc: 'nz',
+  image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1600&q=80',
   region: 'Océanie',
   tagline: 'Travailler et vivre dans le pays le plus paisible du monde',
   overview:
@@ -1066,9 +1089,9 @@ const newZealand: Destination = {
     { label: 'Délai moyen', value: '1–6 mois' },
   ],
   benefits: [
-    { icon: '🌿', title: 'Green List', text: 'Les métiers en pénurie (santé, BTP, ingénierie) mènent directement à la résidence.' },
-    { icon: '🤝', title: 'Employeurs accrédités', text: 'Le système AEWV sécurise les travailleurs : employeurs vérifiés par l’État.' },
-    { icon: '🏞️', title: 'Équilibre de vie', text: 'Régulièrement classée parmi les pays les plus sûrs et paisibles du monde.' },
+    { icon: 'Leaf', title: 'Green List', text: 'Les métiers en pénurie (santé, BTP, ingénierie) mènent directement à la résidence.' },
+    { icon: 'Handshake', title: 'Employeurs accrédités', text: 'Le système AEWV sécurise les travailleurs : employeurs vérifiés par l’État.' },
+    { icon: 'Mountain', title: 'Équilibre de vie', text: 'Régulièrement classée parmi les pays les plus sûrs et paisibles du monde.' },
   ],
   faq: [
     { q: 'Quels métiers recrutent en Nouvelle-Zélande ?', a: 'Infirmiers, médecins, ingénieurs civils, électriciens, charpentiers, soudeurs, développeurs : la Green List est mise à jour régulièrement et les métiers Tier 1 mènent à la résidence directe.' },
@@ -1078,7 +1101,7 @@ const newZealand: Destination = {
       slug: 'travail',
       name: 'Visa de travail (AEWV)',
       short: 'Accredited Employer Work Visa — travailler pour un employeur accrédité.',
-      icon: '💼',
+      icon: 'Briefcase',
       duration: '1–3 mois',
       popular: true,
       overview:
@@ -1125,7 +1148,7 @@ const newZealand: Destination = {
       slug: 'etudes',
       name: 'Visa étudiant',
       short: 'Études en Nouvelle-Zélande avec travail à temps partiel.',
-      icon: '🎓',
+      icon: 'GraduationCap',
       duration: '1–3 mois',
       overview:
         "Le Fee Paying Student Visa permet d'étudier à temps plein avec 20 h de travail par semaine. Les diplômés accèdent au Post Study Work Visa jusqu'à 3 ans selon le niveau du diplôme.",

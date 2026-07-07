@@ -4,6 +4,8 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import FaqList from '@/components/FaqList.astro';
 import TestimonialsSlider from '@/components/TestimonialsSlider.astro';
+import Icon from '@/components/Icon.astro';
+import Flag from '@/components/Flag.astro';
 import { destinations, type Destination } from '@/data/destinations';
 import { articles } from '@/data/blog';
 
@@ -38,41 +40,52 @@ const faqSchema = {
 ---
 
 <Base
-  title={`Immigrer en ${d.name === 'Canada' ? 'au Canada' : d.name} — Programmes, coûts et délais | Switch Point`}
+  title={`Immigrer — ${d.name} : programmes, coûts et délais | SwitchPoint`}
   description={`${d.tagline}. ${d.overview.slice(0, 140)}…`}
   breadcrumbs={crumbs}
   schema={[faqSchema]}
 >
-  <!-- Hero -->
-  <section class="relative overflow-hidden pt-10 pb-8" data-parallax-container>
-    <div class={`aurora -top-24 right-0 h-[420px] w-[420px] bg-gradient-to-br ${d.gradient}`} data-parallax="0.2"></div>
-    <div class="aurora -left-24 top-40 h-80 w-80 bg-brand-500/15" data-parallax="0.1"></div>
-
-    <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+  <!-- Hero photo parallax -->
+  <section class="relative pt-6 sm:pt-10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
       <Breadcrumbs crumbs={crumbs} />
-      <div class="mt-8 grid items-end gap-8 lg:grid-cols-[1fr_auto]">
-        <div class="max-w-3xl" data-reveal>
-          <p class="badge">{d.region}</p>
-          <h1 class="font-display mt-4 flex items-center gap-4 text-4xl font-bold tracking-tight text-navy-900 sm:text-6xl dark:text-white">
-            <span class="text-5xl sm:text-7xl">{d.flag}</span>
-            {d.name}
-          </h1>
-          <p class="mt-3 text-lg font-semibold text-brand-700 dark:text-brand-300">{d.tagline}</p>
-          <p class="section-sub">{d.overview}</p>
+
+      <div class="bento relative mt-6 min-h-[440px] overflow-hidden !rounded-4xl" data-reveal>
+        <div class="media-parallax absolute inset-0">
+          <img src={d.image} alt={`Paysage — ${d.name}`} data-fallback />
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-navy-950/95 via-navy-950/45 to-navy-950/15"></div>
+
+        <div class="relative flex min-h-[440px] flex-col justify-end p-7 sm:p-12">
+          <span class="badge-navy w-fit !bg-navy-950/60">{d.region}</span>
+          <div class="mt-4 flex items-center gap-4">
+            <Flag cc={d.cc} class="h-8 w-11 !rounded-md" />
+            <h1 class="font-display text-4xl font-bold tracking-tight uppercase text-white sm:text-6xl">
+              {d.name}
+            </h1>
+          </div>
+          <p class="mt-3 text-lg font-bold text-accent-400">{d.tagline}</p>
+          <p class="mt-3 max-w-2xl leading-relaxed text-white/75">{d.overview}</p>
           <div class="mt-7 flex flex-wrap gap-3">
-            <a href="/rendez-vous" class="btn-primary btn-lg">Prendre rendez-vous</a>
-            <a href="/outils/simulateur" class="btn-secondary btn-lg">Tester mon éligibilité</a>
+            <a href="/rendez-vous" class="btn-primary btn-lg">
+              <Icon name="Calendar" class="h-4.5 w-4.5" />
+              Prendre rendez-vous
+            </a>
+            <a href="/outils/simulateur" class="btn-secondary btn-lg !border-white/25 !bg-white/10 !text-white hover:!border-accent-400/70">
+              <Icon name="Target" class="h-4.5 w-4.5 text-accent-400" />
+              Tester mon éligibilité
+            </a>
           </div>
         </div>
       </div>
 
       <!-- Facts bento -->
-      <div class="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4" data-reveal-group>
+      <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4" data-reveal-group>
         {
           d.facts.map((f) => (
             <div class="bento p-5" data-reveal-item>
-              <p class="font-display text-xl font-bold text-brand-700 sm:text-2xl dark:text-brand-300">{f.value}</p>
-              <p class="mt-1 text-xs font-medium text-navy-900/50 dark:text-white/45">{f.label}</p>
+              <p class="font-display text-xl font-bold text-brand-800 sm:text-2xl dark:text-accent-300">{f.value}</p>
+              <p class="mt-1 text-xs font-semibold text-navy-900/50 dark:text-white/45">{f.label}</p>
             </div>
           ))
         }
@@ -82,12 +95,14 @@ const faqSchema = {
 
   <!-- Avantages -->
   <section class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
-    <SectionHead eyebrow="Pourquoi cette destination" title="Ce que cette destination vous apporte" />
+    <SectionHead eyebrow="Pourquoi cette destination" title="Ce que cette destination <span class='text-gradient'>vous apporte</span>" />
     <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
       {
         d.benefits.map((b) => (
           <div class="bento bento-hover p-6" data-reveal-item>
-            <span class="text-3xl">{b.icon}</span>
+            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-900 text-accent-400">
+              <Icon name={b.icon} class="h-5 w-5" />
+            </span>
             <h3 class="font-display mt-4 font-bold text-navy-900 dark:text-white">{b.title}</h3>
             <p class="mt-2 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{b.text}</p>
           </div>
@@ -100,7 +115,7 @@ const faqSchema = {
   <section class="mx-auto mt-20 max-w-7xl px-4 sm:px-6" id="programmes">
     <SectionHead
       eyebrow="Programmes"
-      title={`Les voies d'accès — ${d.name}`}
+      title={`Les voies d'accès — <span class='text-gradient'>${d.name}</span>`}
       sub="Chaque programme a sa page dédiée : critères d'éligibilité, documents, frais officiels, délais et étapes."
     />
     <div class="mt-8 grid gap-4 md:grid-cols-2" data-reveal-group>
@@ -108,16 +123,24 @@ const faqSchema = {
         d.programs.map((p) => (
           <a href={`/${d.slug}/${p.slug}`} class="bento bento-hover group flex flex-col p-7" data-reveal-item>
             <div class="flex items-center justify-between">
-              <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500/10 text-2xl">{p.icon}</span>
-              {p.popular && <span class="badge">⭐ Populaire</span>}
+              <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-900 text-accent-400">
+                <Icon name={p.icon} class="h-5.5 w-5.5" />
+              </span>
+              {p.popular && (
+                <span class="badge">
+                  <Icon name="Star" class="h-3 w-3 fill-current" /> Populaire
+                </span>
+              )}
             </div>
-            <h3 class="font-display mt-5 text-xl font-bold text-navy-900 group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">
+            <h3 class="font-display mt-5 text-xl font-bold text-navy-900 group-hover:text-brand-800 dark:text-white dark:group-hover:text-accent-300">
               {p.name}
             </h3>
             <p class="mt-2 flex-1 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{p.short}</p>
             <div class="mt-6 flex items-center justify-between border-t border-navy-900/8 pt-4 dark:border-white/10">
-              <span class="text-xs font-semibold text-navy-900/45 dark:text-white/40">⏱ {p.duration}</span>
-              <span class="btn-primary btn-sm">Voir le programme →</span>
+              <span class="flex items-center gap-1.5 text-xs font-bold text-navy-900/45 dark:text-white/40">
+                <Icon name="Timer" class="h-3.5 w-3.5" /> {p.duration}
+              </span>
+              <span class="btn-primary btn-sm">Voir le programme <Icon name="ArrowRight" class="h-3.5 w-3.5" /></span>
             </div>
           </a>
         ))
@@ -129,16 +152,16 @@ const faqSchema = {
   {
     related.length > 0 && (
       <section class="mx-auto mt-20 max-w-7xl px-4 sm:px-6">
-        <SectionHead eyebrow="Actualités" title={`À lire sur ${d.name}`} />
+        <SectionHead eyebrow="Actualités" title={`À lire sur <span class='text-gradient'>${d.name}</span>`} />
         <div class="mt-8 grid gap-4 md:grid-cols-3" data-reveal-group>
           {related.map((a) => (
             <a href={`/blog/${a.slug}`} class="bento bento-hover group flex flex-col overflow-hidden" data-reveal-item>
-              <div class={`flex h-28 items-center justify-center bg-gradient-to-br text-4xl ${a.gradient}`}>
-                <span class="transition-transform duration-500 group-hover:scale-125">{a.emoji}</span>
+              <div class={`media-parallax relative h-32 bg-gradient-to-br ${a.gradient}`}>
+                <img src={a.image} alt="" loading="lazy" data-fallback class="transition-transform duration-700 group-hover:scale-105" />
               </div>
               <div class="flex flex-1 flex-col p-6">
                 <span class="text-xs text-navy-900/45 dark:text-white/40">{a.readTime} de lecture</span>
-                <h3 class="font-display mt-2 flex-1 leading-snug font-bold text-navy-900 group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">
+                <h3 class="font-display mt-2 flex-1 leading-snug font-bold text-navy-900 group-hover:text-brand-800 dark:text-white dark:group-hover:text-accent-300">
                   {a.title}
                 </h3>
               </div>
@@ -151,13 +174,13 @@ const faqSchema = {
 
   <!-- FAQ -->
   <section class="mx-auto mt-20 max-w-4xl px-4 sm:px-6">
-    <SectionHead eyebrow="FAQ" title={`Questions fréquentes — ${d.name}`} align="center" />
+    <SectionHead eyebrow="FAQ" title={`Questions fréquentes — <span class='text-gradient'>${d.name}</span>`} align="center" />
     <FaqList items={d.faq} class="mt-10" />
   </section>
 
   <!-- Témoignages -->
   <section class="mx-auto mt-20 max-w-7xl overflow-hidden px-4 sm:px-6">
-    <SectionHead eyebrow="Témoignages" title="Ils sont passés par Switch Point" align="center" />
+    <SectionHead eyebrow="Témoignages" title="Ils sont passés <span class='text-gradient'>par SwitchPoint</span>" align="center" />
     <div class="mt-10">
       <TestimonialsSlider />
     </div>

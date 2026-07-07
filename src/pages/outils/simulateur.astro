@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import ToolShell from '@/components/ToolShell.astro';
+import Icon from '@/components/Icon.astro';
 ---
 
 <Base
@@ -8,7 +9,7 @@ import ToolShell from '@/components/ToolShell.astro';
   description="Répondez à 8 questions et découvrez quels programmes d'immigration (Canada, France, Europe, Océanie) correspondent réellement à votre profil."
 >
   <ToolShell
-    icon="🎯"
+    icon="Target"
     name="Simulateur d'éligibilité"
     intro="8 questions, 2 minutes : notre moteur croise votre profil avec les critères des 9 destinations et classe les programmes par compatibilité."
     disclaimer="Résultat indicatif basé sur les critères publics des programmes. Seule une évaluation par un consultant (et, in fine, les autorités d'immigration) fait foi."
@@ -26,14 +27,14 @@ import ToolShell from '@/components/ToolShell.astro';
 
       <div id="sim-result" class="hidden">
         <div class="text-center">
-          <span class="text-4xl">🧭</span>
+          <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-900 text-accent-400"><Icon name="Compass" class="h-6 w-6" /></span>
           <h2 class="font-display mt-3 text-2xl font-bold text-navy-900 dark:text-white">Vos programmes recommandés</h2>
           <p class="mt-2 text-sm text-navy-900/55 dark:text-white/50">Classés par compatibilité avec votre profil.</p>
         </div>
         <div id="sim-matches" class="mt-8 space-y-3"></div>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <a href="/rendez-vous" class="btn-primary btn-lg flex-1">Valider avec un expert</a>
-          <button id="sim-restart" class="btn-secondary btn-lg">↺ Recommencer</button>
+          <button id="sim-restart" class="btn-secondary btn-lg"><Icon name="RotateCcw" class="h-4 w-4" /> Recommencer</button>
         </div>
       </div>
     </div>
@@ -57,10 +58,10 @@ import ToolShell from '@/components/ToolShell.astro';
       key: 'goal',
       title: 'Quel est votre objectif principal ?',
       options: [
-        { v: 'study', label: '🎓 Étudier à l’étranger' },
-        { v: 'work', label: '💼 Travailler à l’étranger' },
-        { v: 'pr', label: '🏠 M’installer définitivement' },
-        { v: 'visit', label: '🧳 Visiter / tourisme / affaires' },
+        { v: 'study', label: 'Étudier à l’étranger' },
+        { v: 'work', label: 'Travailler à l’étranger' },
+        { v: 'pr', label: 'M’installer définitivement' },
+        { v: 'visit', label: 'Visiter / tourisme / affaires' },
       ],
     },
     {
@@ -136,11 +137,15 @@ import ToolShell from '@/components/ToolShell.astro';
 
   interface Match {
     name: string;
-    flag: string;
+    cc: string;
     href: string;
     score: number;
     note: string;
   }
+
+  
+  const flagImg = (cc) =>
+    `<img src="https://flagcdn.com/w20/${cc}.png" width="16" height="12" class="inline-block h-3 w-4 rounded-[2px] object-cover align-baseline" alt="" onerror="this.style.display='none'">`;
 
   function computeMatches(a: Answers): Match[] {
     const young = a.age === '18-24' || a.age === '25-29';
@@ -158,27 +163,27 @@ import ToolShell from '@/components/ToolShell.astro';
 
     if (a.goal === 'study') {
       m.push({
-        name: 'France — Visa étudiant', flag: '🇫🇷', href: '/france/etudes',
+        name: 'France — Visa étudiant', cc: 'fr', href: '/france/etudes',
         score: clamp(40 + (fr ? 25 : 0) + (edu2 || a.education === 'highschool' ? 15 : -10) + (budgetMid ? 12 : -6) + (young ? 4 : -8)),
         note: fr ? 'Votre français est un atout direct pour Campus France.' : 'Un niveau B2 de français sera nécessaire pour la plupart des formations.',
       });
       m.push({
-        name: "Canada — Permis d'études", flag: '🇨🇦', href: '/canada/etudes',
+        name: "Canada — Permis d'études", cc: 'ca', href: '/canada/etudes',
         score: clamp(35 + (budgetHigh ? 25 : a.budget === 'mid' ? 5 : -15) + (fr || en ? 15 : -5) + (young ? 10 : -5)),
         note: budgetHigh ? 'Votre budget permet de viser la preuve financière exigée.' : 'La preuve de fonds (20 635 CAD + scolarité) est le point à sécuriser.',
       });
       m.push({
-        name: 'Russie — Visa étudiant', flag: '🇷🇺', href: '/russie/etudes',
+        name: 'Russie — Visa étudiant', cc: 'ru', href: '/russie/etudes',
         score: clamp(55 + (a.budget === 'low' ? 15 : 5) + (young ? 8 : 0)),
         note: 'Budget minimal et admission rapide : la voie économique par excellence.',
       });
       m.push({
-        name: 'Biélorussie — Visa étudiant', flag: '🇧🇾', href: '/bielorussie/etudes',
+        name: 'Biélorussie — Visa étudiant', cc: 'by', href: '/bielorussie/etudes',
         score: clamp(52 + (a.budget === 'low' ? 18 : 4) + (young ? 6 : 0)),
         note: 'Le coût total études + vie le plus bas de notre catalogue.',
       });
       m.push({
-        name: 'Australie — Visa étudiant 500', flag: '🇦🇺', href: '/australie/etudes',
+        name: 'Australie — Visa étudiant 500', cc: 'au', href: '/australie/etudes',
         score: clamp(25 + (en ? 22 : -12) + (budgetHigh ? 20 : -12) + (young ? 6 : 0)),
         note: en ? 'Votre anglais ouvre la porte du Genuine Student.' : 'IELTS 6.0+ requis — à préparer en amont.',
       });
@@ -186,32 +191,32 @@ import ToolShell from '@/components/ToolShell.astro';
 
     if (a.goal === 'work' || a.goal === 'pr') {
       m.push({
-        name: 'Canada — Express Entry', flag: '🇨🇦', href: '/canada/express-entry',
+        name: 'Canada — Express Entry', cc: 'ca', href: '/canada/express-entry',
         score: clamp(20 + (fr ? 24 : 0) + (en ? 10 : 0) + (edu2 ? 15 : -10) + (exp3 ? 15 : exp ? 8 : -15) + (under36 ? 10 : -12)),
         note: fr ? 'Les tirages francophones sont votre meilleure porte d’entrée.' : 'Sans français ni anglais solide, le score CRS restera bloquant.',
       });
       m.push({
-        name: 'Canada — Arrima (Québec)', flag: '🇨🇦', href: '/canada/arrima',
+        name: 'Canada — Arrima (Québec)', cc: 'ca', href: '/canada/arrima',
         score: clamp(22 + (fr ? 30 : a.french === 'b1' ? 8 : -15) + (edu2 ? 12 : 0) + (exp ? 12 : -8) + (under36 ? 8 : -6)),
         note: fr ? 'Profil francophone : le Québec vous cherche littéralement.' : 'Le français B2 est le prérequis n°1 d’Arrima.',
       });
       m.push({
-        name: 'Lituanie — Permis de travail', flag: '🇱🇹', href: '/lituanie/travail',
+        name: 'Lituanie — Permis de travail', cc: 'lt', href: '/lituanie/travail',
         score: clamp(45 + (exp ? 20 : -10) + (a.budget !== 'low' ? 8 : 0) + (a.education === 'none' || a.education === 'highschool' ? 10 : 4)),
         note: 'Accessible sans diplôme supérieur : l’expérience métier prime.',
       });
       m.push({
-        name: 'Bulgarie — Permis de travail', flag: '🇧🇬', href: '/bulgarie/travail',
+        name: 'Bulgarie — Permis de travail', cc: 'bg', href: '/bulgarie/travail',
         score: clamp(42 + (exp ? 18 : -8) + (a.budget === 'low' ? 8 : 4)),
         note: 'Procédure pilotée par l’employeur, budget d’entrée réduit.',
       });
       m.push({
-        name: 'Nouvelle-Zélande — AEWV', flag: '🇳🇿', href: '/nouvelle-zelande/travail',
+        name: 'Nouvelle-Zélande — AEWV', cc: 'nz', href: '/nouvelle-zelande/travail',
         score: clamp(25 + (en ? 20 : -12) + (exp3 ? 18 : exp ? 8 : -12) + (edu2 ? 6 : 0)),
         note: en ? 'Votre anglais + expérience collent au format AEWV.' : 'Un anglais fonctionnel est requis pour la plupart des métiers.',
       });
       m.push({
-        name: 'Australie — Visas qualifiés', flag: '🇦🇺', href: '/australie/travail',
+        name: 'Australie — Visas qualifiés', cc: 'au', href: '/australie/travail',
         score: clamp(15 + (en ? 22 : -15) + (edu2 ? 15 : -10) + (exp3 ? 15 : 0) + (under36 ? 10 : -15)),
         note: 'Sélectif : anglais fort, diplôme évalué et métier en demande.',
       });
@@ -219,22 +224,22 @@ import ToolShell from '@/components/ToolShell.astro';
 
     if (a.goal === 'visit') {
       m.push({
-        name: 'Espace Schengen — Visa visiteur', flag: '🇪🇺', href: '/schengen/visiteur',
+        name: 'Espace Schengen — Visa visiteur', cc: 'eu', href: '/schengen/visiteur',
         score: clamp(50 + (budgetMid ? 18 : -10) + (exp ? 12 : 0)),
         note: 'Un dossier d’attaches solide est la clé — 27 pays avec un visa.',
       });
       m.push({
-        name: 'Canada — Visa visiteur', flag: '🇨🇦', href: '/canada/visiteur',
+        name: 'Canada — Visa visiteur', cc: 'ca', href: '/canada/visiteur',
         score: clamp(42 + (budgetMid ? 16 : -10) + (exp ? 12 : 0)),
         note: 'Multi-entrées jusqu’à 10 ans si le dossier est convaincant.',
       });
       m.push({
-        name: 'France — Visa visiteur', flag: '🇫🇷', href: '/france/visiteur',
+        name: 'France — Visa visiteur', cc: 'fr', href: '/france/visiteur',
         score: clamp(48 + (budgetMid ? 16 : -8) + (exp ? 10 : 0)),
         note: 'Court séjour Schengen via la France, destination familière.',
       });
       m.push({
-        name: 'Australie — Visa visiteur 600', flag: '🇦🇺', href: '/australie/visiteur',
+        name: 'Australie — Visa visiteur 600', cc: 'au', href: '/australie/visiteur',
         score: clamp(38 + (budgetHigh ? 14 : 0) + (exp ? 8 : 0)),
         note: 'Demande 100 % en ligne, séjours jusqu’à 12 mois.',
       });
@@ -299,7 +304,7 @@ import ToolShell from '@/components/ToolShell.astro';
         return `
         <a href="${m.href}" class="block rounded-2xl border border-navy-900/10 dark:border-white/12 p-5 transition-all hover:border-brand-500 hover:shadow-soft">
           <div class="flex items-center justify-between gap-3">
-            <span class="text-sm font-bold text-navy-900 dark:text-white">${i + 1}. ${m.flag} ${m.name}</span>
+            <span class="text-sm font-bold text-navy-900 dark:text-white">${i + 1}. ${flagImg(m.cc)} ${m.name}</span>
             <span class="text-xs font-bold ${m.score >= 70 ? 'text-emerald-600' : m.score >= 50 ? 'text-brand-600' : 'text-amber-600'}">${label} · ${m.score}%</span>
           </div>
           <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-navy-900/8 dark:bg-white/10">

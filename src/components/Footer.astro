@@ -2,30 +2,41 @@
 import { SITE, whatsappLink } from '@/data/site';
 import { destinations } from '@/data/destinations';
 import { tools } from '@/data/tools';
+import Icon from '@/components/Icon.astro';
+import Flag from '@/components/Flag.astro';
 
 const year = new Date().getFullYear();
 ---
 
 <footer class="relative mt-24 overflow-hidden bg-navy-950 text-white">
-  <div class="aurora -top-40 left-1/4 h-96 w-96 bg-brand-700/30"></div>
-  <div class="aurora -right-20 top-20 h-80 w-80 bg-brand-500/20"></div>
+  <div class="aurora -top-40 left-1/4 h-96 w-96 bg-brand-700/40"></div>
+  <div class="aurora -right-20 top-20 h-80 w-80 bg-accent-500/10"></div>
 
   <!-- Bande CTA -->
   <div class="relative mx-auto max-w-7xl px-4 pt-20 sm:px-6">
-    <div class="glass-deep rounded-4xl p-8 text-center sm:p-14" data-reveal>
-      <p class="eyebrow !text-brand-300">Prêt à changer de continent ?</p>
-      <h2 class="font-display mx-auto mt-3 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">
-        Votre projet d’immigration mérite une stratégie, pas un pari.
-      </h2>
-      <p class="mx-auto mt-4 max-w-xl text-white/60">
-        Consultation d’évaluation gratuite. Un expert analyse votre profil et vous propose le programme le plus réaliste.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a href="/rendez-vous" class="btn-primary btn-lg">Réserver ma consultation</a>
-        <a href={whatsappLink()} target="_blank" rel="noopener" class="btn-secondary btn-lg !border-white/20 !bg-white/5 !text-white hover:!border-emerald-400/60">
-          <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c.1.2.1.4 0 .6l-.4.6-.5.5c-.2.2-.3.4-.1.7.2.3.8 1.4 1.8 2.2 1.2 1.1 2.3 1.4 2.6 1.6.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.2 1.3Z"/></svg>
-          WhatsApp direct
-        </a>
+    <div class="relative overflow-hidden rounded-4xl" data-reveal>
+      <div class="media-parallax absolute inset-0">
+        <img src="/images/team-canada.png" alt="" class="opacity-25" loading="lazy" />
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-br from-navy-950/85 via-brand-900/80 to-navy-950/90"></div>
+      <div class="relative p-8 text-center sm:p-14">
+        <p class="eyebrow !text-accent-400">Prêt à changer de continent ?</p>
+        <h2 class="font-display mx-auto mt-3 max-w-2xl text-3xl font-bold tracking-tight uppercase sm:text-4xl">
+          Votre projet mérite une <span class="text-gradient">stratégie</span>, pas un pari.
+        </h2>
+        <p class="mx-auto mt-4 max-w-xl text-white/65">
+          Consultation d’évaluation gratuite. Un expert analyse votre profil et vous propose le programme le plus réaliste.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href="/rendez-vous" class="btn-primary btn-lg">
+            <Icon name="Calendar" class="h-4.5 w-4.5" />
+            Réserver ma consultation
+          </a>
+          <a href={whatsappLink()} target="_blank" rel="noopener" class="btn-secondary btn-lg !border-white/20 !bg-white/5 !text-white hover:!border-emerald-400/60">
+            <Icon name="MessageCircle" class="h-4.5 w-4.5 text-emerald-400" />
+            WhatsApp direct
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -37,8 +48,8 @@ const year = new Date().getFullYear();
         <a href="/" class="flex items-center gap-3">
           <img src="/images/logo.png" alt="" width="44" height="44" class="h-11 w-11 object-contain" />
           <span class="flex flex-col leading-tight">
-            <span class="font-display text-lg font-bold">Switch Point</span>
-            <span class="text-[10px] font-semibold tracking-[0.2em] uppercase text-brand-400">Immigration Agency</span>
+            <span class="font-display text-lg font-bold">SwitchPoint</span>
+            <span class="text-[10px] font-bold tracking-[0.2em] uppercase text-accent-400">Immigration Agency</span>
           </span>
         </a>
         <p class="mt-5 max-w-sm text-sm leading-relaxed text-white/55">
@@ -52,7 +63,7 @@ const year = new Date().getFullYear();
                 target="_blank"
                 rel="noopener"
                 aria-label={name}
-                class="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-xs font-bold uppercase text-white/60 transition-colors hover:border-brand-400/60 hover:text-brand-300"
+                class="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-[10px] font-bold uppercase text-white/60 transition-colors hover:border-accent-400/60 hover:text-accent-300"
               >
                 {name.slice(0, 2)}
               </a>
@@ -67,14 +78,14 @@ const year = new Date().getFullYear();
           {
             destinations.slice(0, 6).map((d) => (
               <li>
-                <a href={`/${d.slug}`} class="text-sm text-white/60 transition-colors hover:text-brand-300">
-                  {d.flag} {d.name}
+                <a href={`/${d.slug}`} class="flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-accent-300">
+                  <Flag cc={d.cc} class="h-[12px] w-4" /> {d.name}
                 </a>
               </li>
             ))
           }
           <li>
-            <a href="/destinations" class="text-sm font-semibold text-brand-400 hover:text-brand-300">Tout voir →</a>
+            <a href="/destinations" class="text-sm font-bold text-accent-400 hover:text-accent-300">Tout voir →</a>
           </li>
         </ul>
       </div>
@@ -85,30 +96,39 @@ const year = new Date().getFullYear();
           {
             tools.slice(0, 6).map((t) => (
               <li>
-                <a href={`/outils/${t.slug}`} class="text-sm text-white/60 transition-colors hover:text-brand-300">
+                <a href={`/outils/${t.slug}`} class="text-sm text-white/60 transition-colors hover:text-accent-300">
                   {t.name}
                 </a>
               </li>
             ))
           }
           <li>
-            <a href="/outils" class="text-sm font-semibold text-brand-400 hover:text-brand-300">Tous les outils →</a>
+            <a href="/outils" class="text-sm font-bold text-accent-400 hover:text-accent-300">Tous les outils →</a>
           </li>
         </ul>
       </div>
 
       <div>
         <p class="text-xs font-bold tracking-[0.18em] uppercase text-white/40">Contact</p>
-        <ul class="mt-4 space-y-2.5 text-sm text-white/60">
+        <ul class="mt-4 space-y-3 text-sm text-white/60">
           <li>
-            <a href={`tel:${SITE.phone.replace(/\s/g, '')}`} class="transition-colors hover:text-brand-300">📞 {SITE.phoneDisplay}</a>
+            <a href={`tel:${SITE.phone}`} class="flex items-center gap-2.5 transition-colors hover:text-accent-300">
+              <Icon name="Phone" class="h-4 w-4 shrink-0 text-accent-400" /> {SITE.phoneDisplay}
+            </a>
           </li>
           <li>
-            <a href={`mailto:${SITE.email}`} class="break-all transition-colors hover:text-brand-300">✉️ {SITE.email}</a>
+            <a href={`mailto:${SITE.email}`} class="flex items-center gap-2.5 break-all transition-colors hover:text-accent-300">
+              <Icon name="Mail" class="h-4 w-4 shrink-0 text-accent-400" /> {SITE.email}
+            </a>
           </li>
-          <li>📍 {SITE.address}</li>
+          <li class="flex items-start gap-2.5">
+            <Icon name="MapPin" class="mt-0.5 h-4 w-4 shrink-0 text-accent-400" /> {SITE.address}
+          </li>
+          <li class="flex items-start gap-2.5">
+            <Icon name="Clock" class="mt-0.5 h-4 w-4 shrink-0 text-accent-400" /> {SITE.hours}
+          </li>
           <li>
-            <a href="/rendez-vous" class="font-semibold text-brand-400 hover:text-brand-300">Prendre rendez-vous →</a>
+            <a href="/rendez-vous" class="font-bold text-accent-400 hover:text-accent-300">Prendre rendez-vous →</a>
           </li>
         </ul>
       </div>

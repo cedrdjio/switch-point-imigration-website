@@ -8,7 +8,7 @@ import ToolShell from '@/components/ToolShell.astro';
   description="Canada vs France vs Australie vs Lituanie : comparez coûts, délais, salaires, langue et voies vers la résidence permanente, côte à côte."
 >
   <ToolShell
-    icon="⚖️"
+    icon="Scale"
     name="Comparateur de destinations"
     intro="Sélectionnez jusqu'à 3 destinations et comparez ce qui compte vraiment : budget d'entrée, délais, salaires, langue et perspectives de résidence."
     disclaimer="Données moyennes indicatives 2025-2026 destinées à orienter la réflexion — chaque situation individuelle mérite une analyse dédiée."
@@ -26,7 +26,7 @@ import ToolShell from '@/components/ToolShell.astro';
 <script>
   interface Row {
     name: string;
-    flag: string;
+    cc: string;
     href: string;
     budget: string;
     delai: string;
@@ -36,25 +36,29 @@ import ToolShell from '@/components/ToolShell.astro';
     ideal: string;
   }
 
+  
+  const flagImg = (cc) =>
+    `<img src="https://flagcdn.com/w20/${cc}.png" width="16" height="12" class="inline-block h-3 w-4 rounded-[2px] object-cover align-baseline" alt="" onerror="this.style.display='none'">`;
+
   const countries: Record<string, Row> = {
-    canada: { name: 'Canada', flag: '🇨🇦', href: '/canada', budget: '2 500 – 15 000 €', delai: '6 – 18 mois', langue: 'Français / Anglais', salaire: '~3 800 €/mois (médian)', rp: 'Directe (Express Entry, Arrima)', ideal: 'Profils qualifiés et étudiants visant la RP' },
-    france: { name: 'France', flag: '🇫🇷', href: '/france', budget: '1 500 – 10 000 €', delai: '2 – 4 mois', langue: 'Français', salaire: '~2 600 €/mois (médian)', rp: 'Progressive (titres de séjour → 10 ans)', ideal: 'Étudiants francophones' },
-    schengen: { name: 'Schengen', flag: '🇪🇺', href: '/schengen', budget: '300 – 1 500 €', delai: '2 – 6 semaines', langue: 'Selon pays', salaire: '—', rp: 'Non (court séjour)', ideal: 'Visites, affaires, tourisme' },
-    lituanie: { name: 'Lituanie', flag: '🇱🇹', href: '/lituanie', budget: '800 – 3 000 €', delai: '2 – 4 mois', langue: 'Anglais / Russe au travail', salaire: '~1 300 €/mois', rp: 'Après 5 ans (résidence UE)', ideal: 'Travailleurs cherchant l’entrée UE rapide' },
-    bulgarie: { name: 'Bulgarie', flag: '🇧🇬', href: '/bulgarie', budget: '600 – 2 500 €', delai: '2 – 4 mois', langue: 'Anglais au travail', salaire: '~1 000 €/mois', rp: 'Après 5 ans (résidence UE)', ideal: 'Budget d’entrée minimal vers l’UE' },
-    russie: { name: 'Russie', flag: '🇷🇺', href: '/russie', budget: '1 000 – 5 000 €', delai: '1 – 2 mois', langue: 'Russe (année préparatoire)', salaire: '—', rp: 'Possible après études/travail', ideal: 'Études économiques (médecine, ingénierie)' },
-    bielorussie: { name: 'Biélorussie', flag: '🇧🇾', href: '/bielorussie', budget: '800 – 4 000 €', delai: '1 – 2 mois', langue: 'Russe / filières anglophones', salaire: '—', rp: 'Limitée', ideal: 'Études au budget le plus serré' },
-    australie: { name: 'Australie', flag: '🇦🇺', href: '/australie', budget: '5 000 – 25 000 €', delai: '1 – 9 mois', langue: 'Anglais', salaire: '~4 900 €/mois (médian)', rp: 'Directe (189/190) ou après études', ideal: 'Anglophones qualifiés, hauts salaires' },
-    'nouvelle-zelande': { name: 'Nouvelle-Zélande', flag: '🇳🇿', href: '/nouvelle-zelande', budget: '3 000 – 15 000 €', delai: '1 – 6 mois', langue: 'Anglais', salaire: '~3 900 €/mois (médian)', rp: 'Green List : voie directe', ideal: 'Métiers en pénurie (santé, BTP, tech)' },
+    canada: { name: 'Canada', cc: 'ca', href: '/canada', budget: '2 500 – 15 000 €', delai: '6 – 18 mois', langue: 'Français / Anglais', salaire: '~3 800 €/mois (médian)', rp: 'Directe (Express Entry, Arrima)', ideal: 'Profils qualifiés et étudiants visant la RP' },
+    france: { name: 'France', cc: 'fr', href: '/france', budget: '1 500 – 10 000 €', delai: '2 – 4 mois', langue: 'Français', salaire: '~2 600 €/mois (médian)', rp: 'Progressive (titres de séjour → 10 ans)', ideal: 'Étudiants francophones' },
+    schengen: { name: 'Schengen', cc: 'eu', href: '/schengen', budget: '300 – 1 500 €', delai: '2 – 6 semaines', langue: 'Selon pays', salaire: '—', rp: 'Non (court séjour)', ideal: 'Visites, affaires, tourisme' },
+    lituanie: { name: 'Lituanie', cc: 'lt', href: '/lituanie', budget: '800 – 3 000 €', delai: '2 – 4 mois', langue: 'Anglais / Russe au travail', salaire: '~1 300 €/mois', rp: 'Après 5 ans (résidence UE)', ideal: 'Travailleurs cherchant l’entrée UE rapide' },
+    bulgarie: { name: 'Bulgarie', cc: 'bg', href: '/bulgarie', budget: '600 – 2 500 €', delai: '2 – 4 mois', langue: 'Anglais au travail', salaire: '~1 000 €/mois', rp: 'Après 5 ans (résidence UE)', ideal: 'Budget d’entrée minimal vers l’UE' },
+    russie: { name: 'Russie', cc: 'ru', href: '/russie', budget: '1 000 – 5 000 €', delai: '1 – 2 mois', langue: 'Russe (année préparatoire)', salaire: '—', rp: 'Possible après études/travail', ideal: 'Études économiques (médecine, ingénierie)' },
+    bielorussie: { name: 'Biélorussie', cc: 'by', href: '/bielorussie', budget: '800 – 4 000 €', delai: '1 – 2 mois', langue: 'Russe / filières anglophones', salaire: '—', rp: 'Limitée', ideal: 'Études au budget le plus serré' },
+    australie: { name: 'Australie', cc: 'au', href: '/australie', budget: '5 000 – 25 000 €', delai: '1 – 9 mois', langue: 'Anglais', salaire: '~4 900 €/mois (médian)', rp: 'Directe (189/190) ou après études', ideal: 'Anglophones qualifiés, hauts salaires' },
+    'nouvelle-zelande': { name: 'Nouvelle-Zélande', cc: 'nz', href: '/nouvelle-zelande', budget: '3 000 – 15 000 €', delai: '1 – 6 mois', langue: 'Anglais', salaire: '~3 900 €/mois (médian)', rp: 'Green List : voie directe', ideal: 'Métiers en pénurie (santé, BTP, tech)' },
   };
 
   const rows: { key: keyof Row; label: string }[] = [
-    { key: 'budget', label: '💰 Budget total indicatif' },
-    { key: 'delai', label: '⏱ Délai de procédure' },
-    { key: 'langue', label: '💬 Langue requise' },
-    { key: 'salaire', label: '💵 Salaire indicatif' },
-    { key: 'rp', label: '🏠 Résidence permanente' },
-    { key: 'ideal', label: '🎯 Idéal pour' },
+    { key: 'budget', label: 'Budget total indicatif' },
+    { key: 'delai', label: 'Délai de procédure' },
+    { key: 'langue', label: 'Langue requise' },
+    { key: 'salaire', label: 'Salaire indicatif' },
+    { key: 'rp', label: 'Résidence permanente' },
+    { key: 'ideal', label: 'Idéal pour' },
   ];
 
   let selected: string[] = ['canada', 'france', 'lituanie'];
@@ -70,7 +74,7 @@ import ToolShell from '@/components/ToolShell.astro';
           active
             ? 'border-brand-700 bg-brand-700 text-white'
             : 'border-navy-900/10 dark:border-white/12 text-navy-900/65 dark:text-white/60 hover:border-brand-500'
-        }">${c.flag} ${c.name}</button>`;
+        }">${flagImg(c.cc)} ${c.name}</button>`;
       })
       .join('');
     chipsWrap.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
@@ -89,7 +93,7 @@ import ToolShell from '@/components/ToolShell.astro';
     table.innerHTML = `
       <thead><tr>
         <th></th>
-        ${cols.map((c) => `<th class="!text-navy-900 dark:!text-white !text-sm !normal-case !tracking-normal"><a href="${c.href}" class="hover:text-brand-700">${c.flag} ${c.name}</a></th>`).join('')}
+        ${cols.map((c) => `<th class="!text-navy-900 dark:!text-white !text-sm !normal-case !tracking-normal"><a href="${c.href}" class="hover:text-brand-700">${flagImg(c.cc)} ${c.name}</a></th>`).join('')}
       </tr></thead>
       <tbody>
         ${rows

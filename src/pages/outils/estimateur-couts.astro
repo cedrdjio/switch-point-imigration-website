@@ -9,7 +9,7 @@ import { allPrograms } from '@/data/destinations';
   description="Le coût réel de chaque procédure d'immigration : frais gouvernementaux détaillés pour le Canada, la France, l'Europe et l'Océanie."
 >
   <ToolShell
-    icon="💰"
+    icon="Coins"
     name="Estimateur de coûts"
     intro="Sélectionnez un programme : les frais gouvernementaux officiels s'affichent, poste par poste. Zéro surprise."
     disclaimer="Frais officiels indicatifs susceptibles d'évoluer. Hors frais d'agence, de tests de langue et de traduction — chiffrés lors de votre consultation."
@@ -21,7 +21,7 @@ import { allPrograms } from '@/data/destinations';
           {
             allPrograms.map(({ destination, program }, i) => (
               <option value={`${destination.slug}-${program.slug}`} selected={i === 0}>
-                {destination.flag} {destination.name} — {program.name}
+                {destination.name} — {program.name}
               </option>
             ))
           }
@@ -48,11 +48,11 @@ import { allPrograms } from '@/data/destinations';
             </div>
             <div class="mt-5 grid gap-3 sm:grid-cols-2">
               <div class="rounded-2xl bg-brand-500/8 p-4 text-sm">
-                <p class="font-bold text-navy-900 dark:text-white">⏱ Délai</p>
+                <p class="font-bold text-navy-900 dark:text-white">Délai</p>
                 <p class="mt-1 text-navy-900/60 dark:text-white/55">{program.processingTime}</p>
               </div>
               <div class="rounded-2xl bg-brand-500/8 p-4 text-sm">
-                <p class="font-bold text-navy-900 dark:text-white">🤝 Honoraires d'agence</p>
+                <p class="font-bold text-navy-900 dark:text-white">Honoraires d'agence</p>
                 <p class="mt-1 text-navy-900/60 dark:text-white/55">Communiqués après évaluation gratuite — transparents et contractuels.</p>
               </div>
             </div>

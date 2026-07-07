@@ -1,23 +1,24 @@
 ---
 import Base from '@/layouts/Base.astro';
-import WorldMap from '@/components/WorldMap.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import DestinationCard from '@/components/DestinationCard.astro';
 import ToolCard from '@/components/ToolCard.astro';
 import TestimonialsSlider from '@/components/TestimonialsSlider.astro';
 import FaqList from '@/components/FaqList.astro';
+import Icon from '@/components/Icon.astro';
+import Flag from '@/components/Flag.astro';
 import { destinations, popularPrograms } from '@/data/destinations';
 import { tools } from '@/data/tools';
 import { articles } from '@/data/blog';
-import { SITE, whatsappLink } from '@/data/site';
+import { whatsappLink } from '@/data/site';
 
 const featured = destinations.filter((d) => d.featured);
 const others = destinations.filter((d) => !d.featured);
 
 const homeFaq = [
   {
-    q: 'Switch Point est-elle une agence fiable ?',
-    a: "Nous travaillons exclusivement avec des procédures officielles (IRCC, Campus France, employeurs accrédités) et des partenaires licenciés dans chaque pays. Chaque dossier est documenté, chaque étape est traçable, et la première consultation d'évaluation est gratuite.",
+    q: 'SwitchPoint est-elle une agence fiable ?',
+    a: "Nous travaillons exclusivement avec des procédures officielles (IRCC, Campus France, employeurs accrédités) et des partenaires licenciés dans chaque pays. Chaque dossier est documenté, chaque étape est traçable, et la première consultation d'évaluation est gratuite. Nos bureaux sont à Tradex Logpom, Douala.",
   },
   {
     q: 'Combien coûte un accompagnement ?',
@@ -48,85 +49,139 @@ const faqSchema = {
 };
 
 const steps = [
-  { n: '01', title: 'Simulation gratuite', text: 'Évaluez votre éligibilité en ligne en 2 minutes, sans engagement.', icon: '🎯' },
-  { n: '02', title: 'Consultation expert', text: 'Un conseiller analyse votre profil et définit la stratégie optimale.', icon: '🧭' },
-  { n: '03', title: 'Constitution du dossier', text: 'Documents, tests, preuves financières : nous pilotons chaque pièce.', icon: '📂' },
-  { n: '04', title: 'Dépôt et suivi', text: 'Soumission officielle et suivi proactif jusqu’à la décision.', icon: '🛫' },
-  { n: '05', title: 'Installation', text: 'Préparation au départ : logement, banque, premières démarches sur place.', icon: '🏠' },
+  { n: '01', title: 'Simulation gratuite', text: 'Évaluez votre éligibilité en ligne en 2 minutes, sans engagement.', icon: 'Target' },
+  { n: '02', title: 'Consultation expert', text: 'Un conseiller analyse votre profil et définit la stratégie optimale.', icon: 'Compass' },
+  { n: '03', title: 'Constitution du dossier', text: 'Documents, tests, preuves financières : nous pilotons chaque pièce.', icon: 'FolderOpen' },
+  { n: '04', title: 'Dépôt et suivi', text: 'Soumission officielle et suivi proactif jusqu’à la décision.', icon: 'PlaneTakeoff' },
+  { n: '05', title: 'Installation', text: 'Préparation au départ : logement, banque, premières démarches sur place.', icon: 'House' },
+];
+
+const whyUs = [
+  { icon: 'Eye', title: 'Transparence totale', text: 'Frais gouvernementaux affichés, honoraires annoncés avant tout engagement, zéro promesse impossible. Vous savez toujours où va votre argent.' },
+  { icon: 'Target', title: 'Stratégie sur mesure', text: 'Nous ne vendons pas un pays, nous analysons un profil. Le bon programme au bon moment — quitte à vous conseiller d’attendre.' },
+  { icon: 'ShieldCheck', title: 'Partenaires officiels', text: 'Employeurs vérifiés, établissements reconnus, conseillers licenciés (MARA, IAA) sur les destinations réglementées.' },
+  { icon: 'MessageCircle', title: 'Suivi en temps réel', text: 'WhatsApp direct avec votre conseiller, points d’étape à chaque jalon, documents centralisés. Jamais dans le flou.' },
+  { icon: 'Globe', title: 'Expertise multi-pays', text: 'Neuf destinations maîtrisées : quand un programme se ferme, nous savons immédiatement lequel ouvrir.' },
+  { icon: 'PlaneTakeoff', title: 'Jusqu’à l’installation', text: 'Notre travail ne s’arrête pas au visa : logement, compte bancaire, inscription, premiers pas — nous restons joignables.' },
 ];
 
 const searchIndex = [
   ...destinations.map((d) => ({
     href: `/${d.slug}`,
-    icon: d.flag,
     title: d.name,
     sub: d.tagline,
     keywords: `${d.name} ${d.region} pays destination`,
   })),
   ...popularPrograms.map(({ destination, program }) => ({
     href: `/${destination.slug}/${program.slug}`,
-    icon: program.icon,
     title: `${program.name} — ${destination.name}`,
     sub: program.short,
     keywords: `${program.name} ${destination.name} visa programme immigration`,
   })),
   ...tools.map((t) => ({
     href: `/outils/${t.slug}`,
-    icon: t.icon,
     title: t.name,
     sub: t.short,
     keywords: `outil calculateur ${t.name}`,
   })),
 ];
+
+const fmtDate = (d: string) =>
+  new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <Base
-  title="Switch Point Immigration — Votre passerelle vers le Canada, l'Europe et l'Océanie"
-  description="La plateforme d'immigration de référence en Afrique : simulateurs d'éligibilité, 9 destinations, accompagnement expert vers le Canada, la France, l'Europe et l'Océanie."
+  title="SwitchPoint Immigration Agency — Canada, Europe, Océanie depuis l'Afrique"
+  description="L'agence d'immigration de référence à Douala : simulateurs d'éligibilité, 9 destinations, accompagnement expert vers le Canada, la France, l'Europe et l'Océanie."
   schema={[faqSchema]}
 >
-  <!-- ═══════════════ HERO ═══════════════ -->
-  <section class="relative overflow-hidden pt-10 pb-8 sm:pt-16" data-parallax-container>
-    <div class="aurora -top-32 -left-24 h-[480px] w-[480px] bg-brand-500/25" data-parallax="0.15"></div>
-    <div class="aurora top-40 -right-32 h-[420px] w-[420px] bg-brand-700/20" data-parallax="0.3"></div>
+  <!-- ═══════════════ HERO — bento navy + photo parallax ═══════════════ -->
+  <section class="relative pt-6 sm:pt-10" data-parallax-container>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6">
+      <div class="grid gap-4 lg:grid-cols-[1.15fr_1fr]">
+        <!-- Bloc navy -->
+        <div class="bento-navy relative flex flex-col justify-center overflow-hidden p-8 sm:p-12" data-reveal>
+          <div class="aurora -top-20 -right-20 h-72 w-72 bg-accent-500/15"></div>
+          <p class="badge w-fit !border-accent-400/40 !bg-accent-400/10 !text-accent-300" data-reveal data-reveal-delay="0.05">
+            <Icon name="Sparkles" class="h-3.5 w-3.5" />
+            9 destinations · Des centaines de dossiers approuvés
+          </p>
+          <h1 class="font-display mt-6 text-4xl leading-[1.04] font-bold tracking-tight uppercase sm:text-5xl xl:text-6xl">
+            Étudier. Travailler.<br />
+            <span class="text-gradient">S’installer ailleurs.</span>
+          </h1>
+          <p class="mt-5 max-w-lg text-base leading-relaxed text-white/65 sm:text-lg">
+            Canada, France, Europe, Océanie : SwitchPoint transforme votre projet d'immigration en plan d'action — critères officiels, budget clair, suivi expert depuis Douala.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center gap-3">
+            <a href="/outils/simulateur" class="btn-primary btn-lg">
+              <Icon name="Target" class="h-4.5 w-4.5" />
+              Tester mon éligibilité
+              <span class="rounded-full bg-navy-900/15 px-2 py-0.5 text-[11px]">2 min</span>
+            </a>
+            <a href={whatsappLink()} target="_blank" rel="noopener" class="btn-secondary btn-lg !border-white/25 !bg-white/5 !text-white hover:!border-emerald-400/70">
+              <Icon name="MessageCircle" class="h-4.5 w-4.5 text-emerald-400" />
+              WhatsApp
+            </a>
+          </div>
+          <!-- Stats -->
+          <div class="mt-10 grid grid-cols-3 gap-3 border-t border-white/10 pt-7">
+            {
+              [
+                { v: 9, s: '', label: 'Destinations' },
+                { v: 25, s: '+', label: 'Programmes' },
+                { v: 97, s: '%', label: 'Clients satisfaits' },
+              ].map((stat) => (
+                <div>
+                  <p class="font-display text-2xl font-bold text-accent-400 sm:text-3xl">
+                    <span data-counter={stat.v} data-counter-suffix={stat.s}>0</span>
+                  </p>
+                  <p class="mt-0.5 text-[11px] font-semibold tracking-wide text-white/50 uppercase">{stat.label}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
 
-    <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
-      <div class="mx-auto max-w-4xl text-center">
-        <p class="badge mx-auto" data-reveal>
-          <span class="h-1.5 w-1.5 animate-pulse-soft rounded-full bg-emerald-500"></span>
-          9 destinations · Des centaines de dossiers approuvés
-        </p>
-        <h1
-          class="font-display mt-6 text-4xl leading-[1.05] font-bold tracking-tight text-navy-900 sm:text-6xl lg:text-7xl dark:text-white"
-          data-reveal
-          data-reveal-delay="0.08"
-        >
-          L’immigration, <br class="hidden sm:block" />
-          <span class="text-gradient">enfin claire.</span>
-        </h1>
-        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-navy-900/60 sm:text-xl dark:text-white/55" data-reveal data-reveal-delay="0.16">
-          Étudier, travailler ou s’installer au Canada, en Europe ou en Océanie.
-          Simulez votre éligibilité, comparez les programmes et avancez avec un expert à vos côtés.
-        </p>
-        <div class="mt-9 flex flex-wrap items-center justify-center gap-3" data-reveal data-reveal-delay="0.24">
-          <a href="/outils/simulateur" class="btn-primary btn-lg">
-            🎯 Tester mon éligibilité
-            <span class="rounded-full bg-white/20 px-2 py-0.5 text-[11px]">2 min</span>
-          </a>
-          <a href="/rendez-vous" class="btn-secondary btn-lg">Prendre rendez-vous</a>
+        <!-- Colonne photos -->
+        <div class="grid grid-rows-[1.4fr_1fr] gap-4">
+          <div class="bento media-parallax group !rounded-3xl" data-reveal data-reveal-delay="0.12">
+            <img src="/images/traveler-airport.png" alt="Voyageur SwitchPoint à l'aéroport, prêt au départ" class="transition-transform duration-700" />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-950/85 to-transparent p-5 pt-14">
+              <p class="flex items-center gap-2 text-sm font-bold text-white">
+                <Icon name="PlaneTakeoff" class="h-4 w-4 text-accent-400" />
+                Votre départ se prépare ici
+              </p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <a href="/canada" class="bento media-parallax group !rounded-3xl" data-reveal data-reveal-delay="0.2">
+              <img src={destinations[0]!.image} alt="Paysage canadien" loading="lazy" data-fallback class="transition-transform duration-700 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent"></div>
+              <p class="absolute bottom-4 left-4 flex items-center gap-2 text-sm font-bold text-white">
+                <Flag cc="ca" /> Canada
+              </p>
+            </a>
+            <div class="bento-navy flex flex-col items-start justify-between !rounded-3xl p-5" data-reveal data-reveal-delay="0.26">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-400 text-navy-900">
+                <Icon name="Calendar" class="h-5 w-5" />
+              </span>
+              <div>
+                <p class="text-sm font-bold leading-snug">Consultation d'évaluation gratuite</p>
+                <a href="/rendez-vous" class="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-accent-400 hover:text-accent-300">
+                  Réserver <Icon name="ArrowRight" class="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Carte monde -->
-      <div class="relative mt-10" data-reveal data-reveal-delay="0.3">
-        <WorldMap />
-      </div>
-
       <!-- Recherche rapide -->
-      <div class="relative mx-auto -mt-4 max-w-2xl" data-reveal>
+      <div class="relative z-10 mx-auto mt-6 max-w-2xl" data-reveal>
         <div class="glass rounded-3xl p-2 shadow-lift">
           <div class="flex items-center gap-3 px-4">
-            <svg class="h-5 w-5 shrink-0 text-navy-900/40 dark:text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <Icon name="Search" class="h-5 w-5 shrink-0 text-navy-900/40 dark:text-white/40" />
             <input
               data-search-input
               type="search"
@@ -142,10 +197,12 @@ const searchIndex = [
                   href={item.href}
                   data-search-item
                   data-keywords={item.keywords}
-                  class="hidden items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors first:flex hover:bg-brand-500/8 [input:focus~*_&]:flex [.has-query_&]:flex"
+                  class="items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors hover:bg-accent-400/10"
                   style="display:none"
                 >
-                  <span class="text-lg">{item.icon}</span>
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-900 text-accent-400">
+                    <Icon name="ArrowUpRight" class="h-3.5 w-3.5" />
+                  </span>
                   <span class="min-w-0">
                     <span class="block truncate text-sm font-semibold text-navy-900 dark:text-white">{item.title}</span>
                     <span class="block truncate text-xs text-navy-900/45 dark:text-white/40">{item.sub}</span>
@@ -159,29 +216,10 @@ const searchIndex = [
           </div>
         </div>
       </div>
-
-      <!-- Stats -->
-      <div class="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4" data-reveal-group>
-        {
-          [
-            { v: 9, s: '', label: 'Destinations couvertes' },
-            { v: 25, s: '+', label: 'Programmes maîtrisés' },
-            { v: 97, s: '%', label: 'Clients satisfaits' },
-            { v: 8, s: '', label: 'Outils gratuits en ligne' },
-          ].map((stat) => (
-            <div class="bento p-5 text-center" data-reveal-item>
-              <p class="font-display text-3xl font-bold text-brand-700 dark:text-brand-300">
-                <span data-counter={stat.v} data-counter-suffix={stat.s}>0</span>
-              </p>
-              <p class="mt-1 text-xs font-medium text-navy-900/50 dark:text-white/45">{stat.label}</p>
-            </div>
-          ))
-        }
-      </div>
     </div>
   </section>
 
-  <!-- ═══════════════ DESTINATIONS (bento) ═══════════════ -->
+  <!-- ═══════════════ DESTINATIONS — bento photos ═══════════════ -->
   <section class="mx-auto mt-20 max-w-7xl px-4 sm:px-6" id="destinations">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <SectionHead
@@ -189,17 +227,18 @@ const searchIndex = [
         title="Où voulez-vous <span class='text-gradient'>atterrir</span> ?"
         sub="Neuf pays, une méthode unique : des critères officiels, des coûts transparents et une stratégie adaptée à votre profil."
       />
-      <a href="/destinations" class="btn-secondary btn-md" data-reveal>Toutes les destinations →</a>
+      <a href="/destinations" class="btn-navy btn-md" data-reveal>
+        Toutes les destinations
+        <Icon name="ArrowRight" class="h-4 w-4 text-accent-400" />
+      </a>
     </div>
 
-    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
       {featured.map((d) => <DestinationCard destination={d} size="lg" />)}
-      <div class="grid gap-4 sm:col-span-2 lg:grid-cols-2">
-        {others.slice(0, 2).map((d) => <DestinationCard destination={d} />)}
-      </div>
+      <DestinationCard destination={others[0]!} size="lg" />
     </div>
-    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" data-reveal-group>
-      {others.slice(2).map((d) => <DestinationCard destination={d} />)}
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+      {others.slice(1).map((d) => <DestinationCard destination={d} />)}
     </div>
   </section>
 
@@ -207,7 +246,7 @@ const searchIndex = [
   <section class="mx-auto mt-24 max-w-7xl px-4 sm:px-6">
     <SectionHead
       eyebrow="Programmes"
-      title="Les voies d'immigration les plus demandées"
+      title="Les voies d'immigration <span class='text-gradient'>les plus demandées</span>"
       sub="Express Entry, Arrima, permis d'études, visas de travail européens : chaque programme a sa page dédiée avec critères, coûts et délais réels."
       align="center"
     />
@@ -220,15 +259,19 @@ const searchIndex = [
             data-reveal-item
           >
             <div class="flex items-center justify-between">
-              <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-500/10 text-xl">{program.icon}</span>
-              <span class="badge">{destination.flag} {destination.name}</span>
+              <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-900 text-accent-400">
+                <Icon name={program.icon} class="h-5 w-5" />
+              </span>
+              <span class="badge"><Flag cc={destination.cc} class="h-[12px] w-4" /> {destination.name}</span>
             </div>
             <h3 class="font-display mt-4 text-lg font-bold text-navy-900 dark:text-white">{program.name}</h3>
             <p class="mt-1.5 flex-1 text-sm leading-snug text-navy-900/55 dark:text-white/50">{program.short}</p>
             <div class="mt-5 flex items-center justify-between border-t border-navy-900/8 pt-4 dark:border-white/10">
-              <span class="text-xs font-semibold text-navy-900/45 dark:text-white/40">⏱ {program.duration}</span>
-              <span class="text-sm font-semibold text-brand-700 transition-transform duration-300 group-hover:translate-x-1 dark:text-brand-300">
-                Découvrir →
+              <span class="flex items-center gap-1.5 text-xs font-bold text-navy-900/45 dark:text-white/40">
+                <Icon name="Timer" class="h-3.5 w-3.5" /> {program.duration}
+              </span>
+              <span class="flex items-center gap-1 text-sm font-bold text-brand-800 transition-transform duration-300 group-hover:translate-x-1 dark:text-accent-300">
+                Découvrir <Icon name="ArrowRight" class="h-3.5 w-3.5" />
               </span>
             </div>
           </a>
@@ -237,16 +280,16 @@ const searchIndex = [
     </div>
   </section>
 
-  <!-- ═══════════════ SIMULATEUR (bande immersive) ═══════════════ -->
+  <!-- ═══════════════ SIMULATEUR — bande navy immersive ═══════════════ -->
   <section class="relative mx-auto mt-24 max-w-7xl px-4 sm:px-6" data-parallax-container>
-    <div class="relative overflow-hidden rounded-4xl bg-navy-950 p-8 text-white sm:p-14" data-reveal>
-      <div class="aurora -top-24 right-0 h-96 w-96 bg-brand-500/30" data-parallax="0.25"></div>
-      <div class="aurora bottom-0 -left-20 h-72 w-72 bg-brand-700/40" data-parallax="0.12"></div>
+    <div class="bento-navy relative overflow-hidden !rounded-4xl p-8 sm:p-14" data-reveal>
+      <div class="aurora -top-24 right-0 h-96 w-96 bg-accent-500/12" data-parallax="0.25"></div>
+      <div class="aurora bottom-0 -left-20 h-72 w-72 bg-brand-500/25" data-parallax="0.12"></div>
       <div class="relative grid items-center gap-10 lg:grid-cols-2">
         <div>
-          <p class="eyebrow !text-brand-300">Simulateur d'éligibilité</p>
-          <h2 class="font-display mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-            8 questions. <br />Votre feuille de route immigration.
+          <p class="eyebrow !text-accent-400">Simulateur d'éligibilité</p>
+          <h2 class="font-display mt-3 text-3xl font-bold tracking-tight uppercase sm:text-4xl">
+            8 questions.<br />Votre feuille de route.
           </h2>
           <p class="mt-4 max-w-md leading-relaxed text-white/60">
             Âge, diplômes, langues, budget : notre moteur croise votre profil avec les critères officiels des 9 destinations et vous recommande les programmes les plus réalistes.
@@ -255,27 +298,32 @@ const searchIndex = [
             {
               ['Résultat immédiat et gratuit', 'Recommandations classées par probabilité', 'Plan d’action concret pour chaque programme'].map((li) => (
                 <li class="flex items-center gap-3">
-                  <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400/15 text-xs text-emerald-300">✓</span>
+                  <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
+                    <Icon name="Check" class="h-3.5 w-3.5" />
+                  </span>
                   {li}
                 </li>
               ))
             }
           </ul>
-          <a href="/outils/simulateur" class="btn-primary btn-lg mt-8">Lancer la simulation gratuite</a>
+          <a href="/outils/simulateur" class="btn-primary btn-lg mt-8">
+            Lancer la simulation gratuite
+            <Icon name="ArrowRight" class="h-4.5 w-4.5" />
+          </a>
         </div>
         <div class="glass-deep rounded-3xl p-6 sm:p-8">
           <p class="text-xs font-bold tracking-[0.18em] uppercase text-white/40">Aperçu du résultat</p>
           <div class="mt-5 space-y-3">
             {
               [
-                { flag: '🇨🇦', name: 'Canada — Arrima', pct: 92, tone: 'bg-emerald-400' },
-                { flag: '🇨🇦', name: 'Canada — Express Entry', pct: 78, tone: 'bg-brand-400' },
-                { flag: '🇫🇷', name: 'France — Études', pct: 71, tone: 'bg-brand-400' },
-                { flag: '🇱🇹', name: 'Lituanie — Travail', pct: 54, tone: 'bg-amber-400' },
+                { cc: 'ca', name: 'Canada — Arrima', pct: 92, tone: 'bg-emerald-400' },
+                { cc: 'ca', name: 'Canada — Express Entry', pct: 78, tone: 'bg-accent-400' },
+                { cc: 'fr', name: 'France — Études', pct: 71, tone: 'bg-accent-400' },
+                { cc: 'lt', name: 'Lituanie — Travail', pct: 54, tone: 'bg-white/40' },
               ].map((r) => (
                 <div class="rounded-2xl bg-white/6 p-4">
                   <div class="flex items-center justify-between text-sm font-semibold">
-                    <span>{r.flag} {r.name}</span>
+                    <span class="flex items-center gap-2"><Flag cc={r.cc} class="h-[12px] w-4" /> {r.name}</span>
                     <span class="text-white/70">{r.pct}%</span>
                   </div>
                   <div class="mt-2.5 h-1.5 overflow-hidden rounded-full bg-white/10">
@@ -299,58 +347,80 @@ const searchIndex = [
         title="Des outils gratuits, <span class='text-gradient'>dignes d'un cabinet</span>"
         sub="Calculez, comparez, planifiez. Les mêmes instruments que nos consultants, en libre accès."
       />
-      <a href="/outils" class="btn-secondary btn-md" data-reveal>Tous les outils →</a>
+      <a href="/outils" class="btn-navy btn-md" data-reveal>
+        Tous les outils
+        <Icon name="ArrowRight" class="h-4 w-4 text-accent-400" />
+      </a>
     </div>
     <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
       {tools.slice(0, 8).map((t) => <ToolCard tool={t} />)}
     </div>
   </section>
 
-  <!-- ═══════════════ POURQUOI SWITCH POINT ═══════════════ -->
+  <!-- ═══════════════ POURQUOI SWITCHPOINT — photo + points ═══════════════ -->
   <section class="mx-auto mt-24 max-w-7xl px-4 sm:px-6">
-    <SectionHead
-      eyebrow="Pourquoi nous"
-      title="Une agence qui travaille comme un cabinet"
-      sub="La différence entre un dossier déposé et un dossier construit."
-      align="center"
-    />
-    <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3" data-reveal-group>
+    <div class="grid items-stretch gap-4 lg:grid-cols-[1fr_1.3fr]">
+      <div class="bento media-parallax min-h-[320px] !rounded-4xl" data-reveal>
+        <img src="/images/team-canada.png" alt="Clients SwitchPoint arrivés au Canada" loading="lazy" />
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-950/90 to-transparent p-6 pt-16">
+          <p class="font-display text-lg font-bold text-white">Ils sont arrivés. Vous êtes le prochain.</p>
+          <p class="mt-1 text-sm text-white/70">Clients SwitchPoint — Toronto, Canada</p>
+        </div>
+      </div>
+      <div>
+        <SectionHead
+          eyebrow="Pourquoi nous"
+          title="Une agence qui travaille <span class='text-gradient'>comme un cabinet</span>"
+        />
+        <div class="mt-8 grid gap-4 sm:grid-cols-2" data-reveal-group>
+          {
+            whyUs.slice(0, 4).map((f) => (
+              <div class="bento bento-hover p-6" data-reveal-item>
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-900 text-accent-400">
+                  <Icon name={f.icon} class="h-5 w-5" />
+                </span>
+                <h3 class="font-display mt-4 font-bold text-navy-900 dark:text-white">{f.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{f.text}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2" data-reveal-group>
       {
-        [
-          { icon: '🔍', title: 'Transparence totale', text: 'Frais gouvernementaux affichés, honoraires annoncés avant tout engagement, zéro promesse impossible. Vous savez toujours où va votre argent.' },
-          { icon: '🎯', title: 'Stratégie sur mesure', text: 'Nous ne vendons pas un pays, nous analysons un profil. Le bon programme au bon moment — quitte à vous conseiller d’attendre.' },
-          { icon: '🤝', title: 'Partenaires officiels', text: 'Employeurs vérifiés, établissements reconnus, conseillers licenciés (MARA, IAA) sur les destinations réglementées.' },
-          { icon: '📱', title: 'Suivi en temps réel', text: 'WhatsApp direct avec votre conseiller, points d’étape à chaque jalon, documents centralisés. Jamais dans le flou.' },
-          { icon: '🧠', title: 'Expertise multi-pays', text: 'Neuf destinations maîtrisées : quand un programme se ferme, nous savons immédiatement lequel ouvrir.' },
-          { icon: '🛬', title: 'Jusqu’à l’installation', text: 'Notre travail ne s’arrête pas au visa : logement, compte bancaire, inscription, premiers pas — nous restons joignables.' },
-        ].map((f) => (
-          <div class="bento bento-hover p-7" data-reveal-item>
-            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500/15 to-brand-700/15 text-2xl">{f.icon}</span>
-            <h3 class="font-display mt-5 text-lg font-bold text-navy-900 dark:text-white">{f.title}</h3>
-            <p class="mt-2 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{f.text}</p>
+        whyUs.slice(4).map((f) => (
+          <div class="bento bento-hover flex items-start gap-4 p-6" data-reveal-item>
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-900 text-accent-400">
+              <Icon name={f.icon} class="h-5 w-5" />
+            </span>
+            <div>
+              <h3 class="font-display font-bold text-navy-900 dark:text-white">{f.title}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{f.text}</p>
+            </div>
           </div>
         ))
       }
     </div>
   </section>
 
-  <!-- ═══════════════ PROCESS TIMELINE ═══════════════ -->
+  <!-- ═══════════════ TIMELINE ═══════════════ -->
   <section class="mx-auto mt-24 max-w-7xl px-4 sm:px-6">
     <SectionHead
       eyebrow="Votre parcours"
-      title="De la simulation au décollage, en 5 étapes"
+      title="De la simulation au décollage, <span class='text-gradient'>en 5 étapes</span>"
       align="center"
     />
     <div class="relative mt-12">
-      <div class="absolute top-8 right-[10%] left-[10%] hidden h-px bg-gradient-to-r from-transparent via-brand-500/40 to-transparent lg:block"></div>
+      <div class="absolute top-8 right-[10%] left-[10%] hidden h-px bg-gradient-to-r from-transparent via-accent-500/50 to-transparent lg:block"></div>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5" data-reveal-group>
         {
           steps.map((s) => (
             <div class="bento relative p-6 text-center" data-reveal-item>
-              <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand-500/15 to-brand-700/20 text-2xl ring-4 ring-brand-500/10">
-                {s.icon}
+              <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand-900 text-accent-400 ring-4 ring-accent-400/15">
+                <Icon name={s.icon} class="h-6 w-6" />
               </span>
-              <p class="font-display mt-4 text-xs font-bold text-brand-600 dark:text-brand-400">ÉTAPE {s.n}</p>
+              <p class="font-display mt-4 text-xs font-bold text-accent-600 dark:text-accent-400">ÉTAPE {s.n}</p>
               <h3 class="font-display mt-1 font-bold text-navy-900 dark:text-white">{s.title}</h3>
               <p class="mt-2 text-xs leading-relaxed text-navy-900/55 dark:text-white/50">{s.text}</p>
             </div>
@@ -364,7 +434,7 @@ const searchIndex = [
   <section class="mx-auto mt-24 max-w-7xl overflow-hidden px-4 sm:px-6">
     <SectionHead
       eyebrow="Témoignages"
-      title="Ils ont changé de continent avec nous"
+      title="Ils ont changé de continent <span class='text-gradient'>avec nous</span>"
       sub="Des parcours réels, du premier rendez-vous à l'installation."
       align="center"
     />
@@ -373,29 +443,33 @@ const searchIndex = [
     </div>
   </section>
 
-  <!-- ═══════════════ ARTICLES ═══════════════ -->
+  <!-- ═══════════════ ARTICLES — cartes photo ═══════════════ -->
   <section class="mx-auto mt-24 max-w-7xl px-4 sm:px-6">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <SectionHead
         eyebrow="Le blog"
-        title="Restez en avance sur les règles"
+        title="Restez en avance <span class='text-gradient'>sur les règles</span>"
         sub="Les politiques d'immigration changent vite. Nos analyses vous gardent un coup d'avance."
       />
-      <a href="/blog" class="btn-secondary btn-md" data-reveal>Tout le blog →</a>
+      <a href="/blog" class="btn-navy btn-md" data-reveal>
+        Tout le blog
+        <Icon name="ArrowRight" class="h-4 w-4 text-accent-400" />
+      </a>
     </div>
     <div class="mt-10 grid gap-4 md:grid-cols-3" data-reveal-group>
       {
         articles.slice(0, 3).map((a) => (
           <a href={`/blog/${a.slug}`} class="bento bento-hover group flex flex-col overflow-hidden" data-reveal-item>
-            <div class={`flex h-36 items-center justify-center bg-gradient-to-br text-5xl ${a.gradient}`}>
-              <span class="transition-transform duration-500 group-hover:scale-125">{a.emoji}</span>
+            <div class={`media-parallax relative h-44 bg-gradient-to-br ${a.gradient}`}>
+              <img src={a.image} alt="" loading="lazy" data-fallback class="transition-transform duration-700 group-hover:scale-105" />
+              <span class="badge-navy absolute top-3 left-3 !bg-navy-950/70">{a.category}</span>
             </div>
             <div class="flex flex-1 flex-col p-6">
               <div class="flex items-center gap-2 text-xs text-navy-900/45 dark:text-white/40">
-                <span class="badge">{a.category}</span>
-                <span>{a.readTime} de lecture</span>
+                <span>{fmtDate(a.date)}</span>
+                <span>· {a.readTime} de lecture</span>
               </div>
-              <h3 class="font-display mt-3 flex-1 text-lg leading-snug font-bold text-navy-900 group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">
+              <h3 class="font-display mt-3 flex-1 text-lg leading-snug font-bold text-navy-900 group-hover:text-brand-800 dark:text-white dark:group-hover:text-accent-300">
                 {a.title}
               </h3>
               <p class="mt-2 line-clamp-2 text-sm text-navy-900/55 dark:text-white/50">{a.excerpt}</p>
@@ -408,11 +482,11 @@ const searchIndex = [
 
   <!-- ═══════════════ FAQ ═══════════════ -->
   <section class="mx-auto mt-24 max-w-4xl px-4 sm:px-6" id="faq">
-    <SectionHead eyebrow="FAQ" title="Les questions qu'on nous pose chaque jour" align="center" />
+    <SectionHead eyebrow="FAQ" title="Les questions qu'on nous pose <span class='text-gradient'>chaque jour</span>" align="center" />
     <FaqList items={homeFaq} class="mt-10" />
     <p class="mt-8 text-center text-sm text-navy-900/55 dark:text-white/50" data-reveal>
       Une autre question ?
-      <a href={whatsappLink('Bonjour, j’ai une question sur mon projet d’immigration.')} target="_blank" rel="noopener" class="font-semibold text-brand-700 hover:underline dark:text-brand-300">
+      <a href={whatsappLink('Bonjour, j’ai une question sur mon projet d’immigration.')} target="_blank" rel="noopener" class="font-bold text-brand-800 hover:underline dark:text-accent-300">
         Écrivez-nous sur WhatsApp
       </a>
       — réponse en moins d'une heure ouvrée.

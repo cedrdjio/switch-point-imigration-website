@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Icon from '@/components/Icon.astro';
 import { SITE, whatsappLink } from '@/data/site';
 
 const crumbs = [
@@ -10,25 +11,25 @@ const crumbs = [
 
 const channels = [
   {
-    icon: '💬',
+    icon: 'MessageCircle',
     title: 'WhatsApp',
-    desc: 'Le canal le plus rapide — réponse en moins d’une heure ouvrée.',
-    cta: 'Ouvrir WhatsApp',
+    desc: 'Réservez votre consultation directement via WhatsApp — réponse en moins d’une heure ouvrée.',
+    cta: 'Réserver via WhatsApp',
     href: whatsappLink(),
     external: true,
     highlight: true,
   },
   {
-    icon: '📞',
+    icon: 'Phone',
     title: 'Téléphone',
-    desc: `Lun – Sam, 8h – 18h : ${SITE.phoneDisplay}`,
+    desc: `${SITE.hours} : ${SITE.phoneDisplay}`,
     cta: 'Appeler maintenant',
-    href: `tel:${SITE.phone.replace(/\s/g, '')}`,
+    href: `tel:${SITE.phone}`,
     external: false,
     highlight: false,
   },
   {
-    icon: '✉️',
+    icon: 'Mail',
     title: 'Email',
     desc: 'Pour les demandes détaillées avec documents joints.',
     cta: 'Écrire un email',
@@ -37,7 +38,7 @@ const channels = [
     highlight: false,
   },
   {
-    icon: '📅',
+    icon: 'Calendar',
     title: 'Rendez-vous',
     desc: 'Consultation d’évaluation gratuite, au bureau ou en visio.',
     cta: 'Réserver un créneau',
@@ -49,8 +50,8 @@ const channels = [
 ---
 
 <Base
-  title="Contact — WhatsApp, téléphone, email | Switch Point Immigration"
-  description={`Contactez Switch Point Immigration : WhatsApp, téléphone ${SITE.phoneDisplay}, email ou rendez-vous gratuit à ${SITE.address}.`}
+  title="Contact — WhatsApp, téléphone, email | SwitchPoint Immigration Agency"
+  description={`Contactez SwitchPoint Immigration Agency : WhatsApp, téléphone ${SITE.phoneDisplay}, email ou rendez-vous gratuit à ${SITE.address}.`}
   breadcrumbs={crumbs}
 >
   <section class="relative overflow-hidden pt-10 pb-16">
@@ -59,7 +60,7 @@ const channels = [
       <Breadcrumbs crumbs={crumbs} />
       <div class="mt-8 max-w-2xl" data-reveal>
         <p class="eyebrow">Contact</p>
-        <h1 class="font-display mt-3 text-4xl font-bold tracking-tight text-navy-900 sm:text-5xl dark:text-white">
+        <h1 class="font-display mt-3 text-4xl font-bold tracking-tight uppercase text-navy-900 sm:text-5xl dark:text-white">
           Parlons de votre projet. <span class="text-gradient">Vraiment.</span>
         </h1>
         <p class="section-sub">
@@ -74,17 +75,19 @@ const channels = [
               href={c.href}
               target={c.external ? '_blank' : undefined}
               rel={c.external ? 'noopener' : undefined}
-              class={`bento bento-hover group p-7 ${c.highlight ? 'bg-gradient-to-br from-emerald-500/10 to-brand-500/10' : ''}`}
+              class={`bento bento-hover group p-7 ${c.highlight ? '!border-emerald-500/30 bg-gradient-to-br from-emerald-500/8 to-accent-400/8' : ''}`}
               data-reveal-item
             >
               <div class="flex items-center justify-between">
-                <span class="text-3xl">{c.icon}</span>
+                <span class={`flex h-12 w-12 items-center justify-center rounded-2xl ${c.highlight ? 'bg-emerald-500 text-white' : 'bg-brand-900 text-accent-400'}`}>
+                  <Icon name={c.icon} class="h-5.5 w-5.5" />
+                </span>
                 {c.highlight && <span class="badge">Recommandé</span>}
               </div>
               <h2 class="font-display mt-4 text-xl font-bold text-navy-900 dark:text-white">{c.title}</h2>
               <p class="mt-2 text-sm leading-relaxed text-navy-900/55 dark:text-white/50">{c.desc}</p>
-              <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 transition-transform duration-300 group-hover:translate-x-1 dark:text-brand-300">
-                {c.cta} →
+              <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-800 transition-transform duration-300 group-hover:translate-x-1 dark:text-accent-300">
+                {c.cta} <Icon name="ArrowRight" class="h-3.5 w-3.5" />
               </span>
             </a>
           ))
@@ -94,17 +97,17 @@ const channels = [
       <div class="bento mt-4 p-7" data-reveal>
         <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 class="font-display text-lg font-bold text-navy-900 dark:text-white">📍 Nos bureaux</h2>
-            <p class="mt-1 text-sm text-navy-900/55 dark:text-white/50">{SITE.address} — sur rendez-vous uniquement.</p>
+            <h2 class="font-display flex items-center gap-2.5 text-lg font-bold text-navy-900 dark:text-white">
+              <Icon name="MapPin" class="h-5 w-5 text-accent-600 dark:text-accent-400" />
+              Nos bureaux
+            </h2>
+            <p class="mt-1.5 text-sm text-navy-900/55 dark:text-white/50">{SITE.address} — sur rendez-vous.</p>
           </div>
-          <div class="flex gap-6 text-sm">
+          <div class="flex items-center gap-3 text-sm">
+            <Icon name="Clock" class="h-5 w-5 shrink-0 text-accent-600 dark:text-accent-400" />
             <div>
-              <p class="font-bold text-navy-900 dark:text-white">Lun – Ven</p>
-              <p class="text-navy-900/55 dark:text-white/50">8h00 – 18h00</p>
-            </div>
-            <div>
-              <p class="font-bold text-navy-900 dark:text-white">Samedi</p>
-              <p class="text-navy-900/55 dark:text-white/50">9h00 – 14h00</p>
+              <p class="font-bold text-navy-900 dark:text-white">Lundi – Samedi</p>
+              <p class="text-navy-900/55 dark:text-white/50">08h00 – 17h30</p>
             </div>
           </div>
         </div>

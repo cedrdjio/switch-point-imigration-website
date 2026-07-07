@@ -7,6 +7,8 @@ export interface Article {
   date: string;
   readTime: string;
   emoji: string;
+  /** Photo d'illustration (distante, repli local auto) */
+  image: string;
   gradient: string;
   body: string[]; // paragraphes / blocs markdown-light
 }
@@ -27,6 +29,7 @@ export const categories = [
 export const articles: Article[] = [
   {
     slug: 'tirages-express-entry-francophones-2026',
+    image: 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=1600&q=80',
     title: 'Express Entry 2026 : pourquoi les tirages francophones sont votre meilleure chance',
     excerpt:
       'Les tirages ciblés pour les candidats francophones affichent des scores CRS jusqu’à 130 points sous les tirages généraux. Voici comment en profiter.',
@@ -48,6 +51,7 @@ export const articles: Article[] = [
   },
   {
     slug: 'campus-france-calendrier-2026-2027',
+    image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=80',
     title: 'Campus France 2026-2027 : le calendrier complet pour ne pas rater la rentrée',
     excerpt:
       'La procédure « Études en France » obéit à des dates strictes. Le calendrier officiel, étape par étape, et les erreurs qui coûtent une année.',
@@ -69,6 +73,7 @@ export const articles: Article[] = [
   },
   {
     slug: 'permis-etudes-canada-preuve-financiere-2026',
+    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=80',
     title: "Permis d'études Canada : la nouvelle preuve financière expliquée",
     excerpt:
       'Le seuil de fonds requis pour un permis d’études a été relevé à 20 635 CAD. Ce que ça change pour votre dossier et comment présenter des finances irréprochables.',
@@ -90,6 +95,7 @@ export const articles: Article[] = [
   },
   {
     slug: 'travailler-en-lituanie-guide-2026',
+    image: 'https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=1600&q=80',
     title: 'Travailler en Lituanie : le guide complet 2026 pour les candidats africains',
     excerpt:
       'Salaires, métiers en demande, procédure de permis et pièges à éviter : tout ce qu’il faut savoir avant de postuler en Lituanie.',
@@ -111,6 +117,7 @@ export const articles: Article[] = [
   },
   {
     slug: 'visa-schengen-eviter-refus',
+    image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=80',
     title: 'Visa Schengen : les 7 erreurs qui provoquent un refus (et comment les éviter)',
     excerpt:
       'Assurance non conforme, itinéraire incohérent, fonds injustifiés… Le décryptage des motifs de refus les plus fréquents par nos consultants.',
@@ -134,6 +141,7 @@ export const articles: Article[] = [
   },
   {
     slug: 'australie-genuine-student-2026',
+    image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1600&q=80',
     title: "Australie : réussir le critère Genuine Student en 2026",
     excerpt:
       "Le critère GS a remplacé le GTE et durci l'évaluation des étudiants. Comment démontrer un projet d'études authentique et éviter le refus.",

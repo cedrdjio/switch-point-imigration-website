@@ -1,0 +1,19 @@
+---
+/** Drapeau via flagcdn.com — masqué automatiquement si indisponible. */
+interface Props {
+  cc: string;
+  class?: string;
+}
+const { cc, class: className = 'h-[15px] w-5' } = Astro.props;
+---
+
+<img
+  src={`https://flagcdn.com/w40/${cc}.png`}
+  srcset={`https://flagcdn.com/w80/${cc}.png 2x`}
+  width="20"
+  height="15"
+  class={`${className} shrink-0 rounded-[3px] object-cover shadow-sm`}
+  alt=""
+  loading="lazy"
+  data-hide-onerror
+/>

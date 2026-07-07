@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Icon from '@/components/Icon.astro';
 import { articles, type Article } from '@/data/blog';
 import { SITE } from '@/data/site';
 
@@ -25,6 +26,7 @@ const articleSchema = {
   headline: a.title,
   description: a.excerpt,
   datePublished: a.date,
+  image: a.image,
   author: { '@type': 'Organization', name: SITE.name },
   publisher: { '@type': 'Organization', name: SITE.name, logo: { '@type': 'ImageObject', url: `${SITE.url}/images/logo.png` } },
   mainEntityOfPage: `${SITE.url}/blog/${a.slug}`,
@@ -34,14 +36,13 @@ const others = articles.filter((x) => x.slug !== a.slug).slice(0, 3);
 const fmtDate = (d: string) =>
   new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 
-/** Rendu markdown-light : lignes "## " → h2, sinon paragraphe */
 const blocks = a.body.map((b) =>
   b.startsWith('## ') ? { type: 'h2' as const, text: b.slice(3) } : { type: 'p' as const, text: b }
 );
 ---
 
 <Base
-  title={`${a.title} | Blog Switch Point`}
+  title={`${a.title} | Blog SwitchPoint`}
   description={a.excerpt}
   ogType="article"
   breadcrumbs={crumbs}
@@ -64,8 +65,8 @@ const blocks = a.body.map((b) =>
         <p class="mt-4 text-lg leading-relaxed text-navy-900/60 dark:text-white/55">{a.excerpt}</p>
       </header>
 
-      <div class={`mt-8 flex h-52 items-center justify-center rounded-4xl bg-gradient-to-br text-7xl ${a.gradient}`} data-reveal>
-        {a.emoji}
+      <div class={`media-parallax mt-8 h-64 rounded-4xl bg-gradient-to-br sm:h-80 ${a.gradient}`} data-reveal>
+        <img src={a.image} alt="" data-fallback class="!rounded-4xl" />
       </div>
 
       <div class="prose-premium mt-10" data-reveal>
@@ -74,30 +75,35 @@ const blocks = a.body.map((b) =>
 
       <!-- CTA article -->
       <div class="bento mt-12 flex flex-col items-center gap-4 p-8 text-center sm:flex-row sm:text-left" data-reveal>
-        <span class="text-4xl">🧭</span>
+        <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-900 text-accent-400">
+          <Icon name="Compass" class="h-6 w-6" />
+        </span>
         <div class="flex-1">
           <h2 class="font-display text-lg font-bold text-navy-900 dark:text-white">Ce sujet concerne votre projet ?</h2>
           <p class="mt-1 text-sm text-navy-900/55 dark:text-white/50">
             Nos consultants transforment ces règles en stratégie personnalisée. Première évaluation gratuite.
           </p>
         </div>
-        <a href="/rendez-vous" class="btn-primary btn-md shrink-0">Prendre rendez-vous</a>
+        <a href="/rendez-vous" class="btn-primary btn-md shrink-0">
+          <Icon name="Calendar" class="h-4 w-4" />
+          Prendre rendez-vous
+        </a>
       </div>
     </div>
 
     <!-- À lire ensuite -->
     <div class="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
-      <h2 class="font-display text-2xl font-bold text-navy-900 dark:text-white" data-reveal>À lire ensuite</h2>
+      <h2 class="font-display text-2xl font-bold uppercase text-navy-900 dark:text-white" data-reveal>À lire <span class="text-gradient">ensuite</span></h2>
       <div class="mt-6 grid gap-4 md:grid-cols-3" data-reveal-group>
         {
           others.map((o) => (
             <a href={`/blog/${o.slug}`} class="bento bento-hover group flex flex-col overflow-hidden" data-reveal-item>
-              <div class={`flex h-28 items-center justify-center bg-gradient-to-br text-4xl ${o.gradient}`}>
-                <span class="transition-transform duration-500 group-hover:scale-125">{o.emoji}</span>
+              <div class={`media-parallax relative h-32 bg-gradient-to-br ${o.gradient}`}>
+                <img src={o.image} alt="" loading="lazy" data-fallback class="transition-transform duration-700 group-hover:scale-105" />
               </div>
               <div class="flex flex-1 flex-col p-5">
                 <span class="text-xs text-navy-900/45 dark:text-white/40">{o.category} · {o.readTime}</span>
-                <h3 class="font-display mt-2 flex-1 text-sm leading-snug font-bold text-navy-900 group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">
+                <h3 class="font-display mt-2 flex-1 text-sm leading-snug font-bold text-navy-900 group-hover:text-brand-800 dark:text-white dark:group-hover:text-accent-300">
                   {o.title}
                 </h3>
               </div>

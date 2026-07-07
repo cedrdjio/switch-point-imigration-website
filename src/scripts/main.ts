@@ -77,6 +77,21 @@ if (!prefersReduced) {
       scrollTrigger: { trigger: el.parentElement, start: 'top top', end: 'bottom top', scrub: true },
     });
   });
+
+  /* Parallax d'image : l'image glisse dans son cadre (.media-parallax) */
+  document.querySelectorAll<HTMLElement>('.media-parallax').forEach((frame) => {
+    const img = frame.querySelector('img');
+    if (!img) return;
+    gsap.fromTo(
+      img,
+      { yPercent: -21 },
+      {
+        yPercent: 0,
+        ease: 'none',
+        scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true },
+      }
+    );
+  });
 } else {
   document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
     el.style.opacity = '1';
@@ -218,8 +233,20 @@ if (searchInput && searchResults) {
   searchInput.addEventListener('input', filter);
 }
 
-/* ── Marquee pause au survol ───────────────────────── */
-document.querySelectorAll<HTMLElement>('[data-marquee]').forEach((m) => {
-  m.addEventListener('mouseenter', () => (m.style.animationPlayState = 'paused'));
-  m.addEventListener('mouseleave', () => (m.style.animationPlayState = 'running'));
+/* ── Images distantes : repli élégant si indisponibles ── */
+document.querySelectorAll<HTMLImageElement>('img[data-fallback]').forEach((img) => {
+  const swap = () => {
+    if (img.src.endsWith('/images/fallback.svg')) return;
+    img.src = '/images/fallback.svg';
+    img.removeAttribute('srcset');
+  };
+  img.addEventListener('error', swap);
+  if (img.complete && img.naturalWidth === 0) swap();
+});
+
+/* Petites images (drapeaux…) : masquer si indisponibles */
+document.querySelectorAll<HTMLImageElement>('img[data-hide-onerror]').forEach((img) => {
+  const hide = () => (img.style.display = 'none');
+  img.addEventListener('error', hide);
+  if (img.complete && img.naturalWidth === 0) hide();
 });
