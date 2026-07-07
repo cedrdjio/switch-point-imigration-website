@@ -3,31 +3,31 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* ── Palette SwitchPoint : navy profond + or (style MyVisaCoach) ── */
-  --color-brand-50: #f0f4fb;
-  --color-brand-100: #dde6f4;
-  --color-brand-200: #c1d1e9;
-  --color-brand-300: #96b2d8;
-  --color-brand-400: #648cc2;
-  --color-brand-500: #416ba8;
-  --color-brand-600: #30538c;
-  --color-brand-700: #284272;
-  --color-brand-800: #1e3054;
-  --color-brand-900: #16264a;
-  --color-brand-950: #0d1830;
+  /* ── Palette SwitchPoint : bleus du logo (marine, royal, ciel) ── */
+  --color-brand-50: #eef4fc;
+  --color-brand-100: #d9e7f8;
+  --color-brand-200: #bcd6f2;
+  --color-brand-300: #8ebdea;
+  --color-brand-400: #599cdd;
+  --color-brand-500: #2f7cc9;
+  --color-brand-600: #0060b0;
+  --color-brand-700: #004090;
+  --color-brand-800: #003077;
+  --color-brand-900: #00205f;
+  --color-brand-950: #001060;
 
-  --color-accent-50: #fff9eb;
-  --color-accent-100: #ffefc6;
-  --color-accent-200: #ffdd88;
-  --color-accent-300: #ffc94a;
-  --color-accent-400: #ffb920;
-  --color-accent-500: #f9a807;
-  --color-accent-600: #dd8102;
-  --color-accent-700: #b75a06;
+  --color-accent-50: #eef8fe;
+  --color-accent-100: #d8effd;
+  --color-accent-200: #b4e3fb;
+  --color-accent-300: #7fd0f8;
+  --color-accent-400: #45b6f2;
+  --color-accent-500: #20a0f0;
+  --color-accent-600: #0d7fd0;
+  --color-accent-700: #0060b0;
 
-  --color-navy-800: #14213d;
-  --color-navy-900: #0e1830;
-  --color-navy-950: #080f20;
+  --color-navy-800: #0a1a48;
+  --color-navy-900: #061134;
+  --color-navy-950: #030920;
 
   /* ── Typographie ── */
   --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
@@ -40,7 +40,7 @@
   /* ── Ombres ── */
   --shadow-soft: 0 2px 8px -2px rgb(13 24 48 / 0.08), 0 8px 24px -6px rgb(13 24 48 / 0.08);
   --shadow-lift: 0 4px 16px -4px rgb(13 24 48 / 0.14), 0 16px 48px -12px rgb(13 24 48 / 0.2);
-  --shadow-glow: 0 0 0 1px rgb(249 168 7 / 0.2), 0 8px 32px -8px rgb(249 168 7 / 0.45);
+  --shadow-glow: 0 0 0 1px rgb(32 160 240 / 0.2), 0 8px 32px -8px rgb(32 160 240 / 0.45);
 
   /* ── Animations ── */
   --animate-float: float 6s ease-in-out infinite;
@@ -83,8 +83,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent-400);
-  color: var(--color-navy-900);
+  background: var(--color-brand-600);
+  color: #ffffff;
 }
 
 }
@@ -110,7 +110,7 @@ body {
 /* Carte bento navy (blocs sombres façon MyVisaCoach) */
 .bento-navy {
   @apply relative overflow-hidden rounded-3xl border border-white/8 text-white shadow-lift;
-  background: linear-gradient(150deg, #1e3054 0%, #16264a 55%, #0d1830 100%);
+  background: linear-gradient(150deg, #003077 0%, #00205f 55%, #001060 100%);
 }
 
 /* Surface verre */
@@ -197,9 +197,9 @@ body {
 }
 .dark .section-sub { @apply text-white/55; }
 
-/* Mot accentué doré dans les titres */
+/* Mot accentué bleu ciel dans les titres */
 .text-gradient {
-  background: linear-gradient(100deg, #ffc94a 0%, #f9a807 55%, #dd8102 100%);
+  background: linear-gradient(100deg, #8ecdff 0%, #38acf0 55%, #0060b0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -239,7 +239,7 @@ body {
   background: rgb(30 48 84 / 0.3);
   border-radius: 8px;
 }
-.dark ::-webkit-scrollbar-thumb { background: rgb(249 168 7 / 0.3); }
+.dark ::-webkit-scrollbar-thumb { background: rgb(32 160 240 / 0.3); }
 
 /* Tableau */
 .table-premium {

@@ -150,7 +150,7 @@ export const articles: Article[] = [
     date: '2026-03-28',
     readTime: '5 min',
     emoji: '🇦🇺',
-    gradient: 'from-amber-500 to-brand-800',
+    gradient: 'from-accent-500 to-brand-800',
     body: [
       "Depuis la réforme migratoire australienne, chaque demandeur de visa étudiant doit convaincre qu'il est un « Genuine Student » : les questions du formulaire imposent de justifier le choix du programme, de l'établissement et le lien avec votre carrière.",
       '## Ce qui a changé',

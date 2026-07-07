@@ -456,7 +456,7 @@ const schengen: Destination = {
   tagline: '27 pays, un seul visa',
   overview:
     "Le visa Schengen ouvre les portes de 27 pays européens pour des séjours jusqu'à 90 jours : tourisme, affaires, visites familiales ou événements. Un seul dossier, une liberté de circulation totale dans l'espace.",
-  gradient: 'from-brand-700/20 via-brand-500/10 to-amber-400/20',
+  gradient: 'from-brand-700/20 via-brand-500/10 to-accent-300/20',
   facts: [
     { label: 'Pays couverts', value: '27' },
     { label: 'Durée max', value: '90 jours / 180' },
@@ -920,7 +920,7 @@ const australia: Destination = {
   tagline: 'Salaires records et qualité de vie exceptionnelle',
   overview:
     "L'Australie combine salaires parmi les plus élevés du monde, universités du top 100 mondial et immigration à points structurée. Études, visas qualifiés et visas visiteurs pour bâtir un projet dans l'hémisphère sud.",
-  gradient: 'from-amber-400/20 via-brand-500/10 to-brand-800/20',
+  gradient: 'from-accent-300/20 via-brand-500/10 to-brand-800/20',
   facts: [
     { label: 'Salaire minimum', value: '~24 AUD/h' },
     { label: 'Universités top 100', value: '9' },
